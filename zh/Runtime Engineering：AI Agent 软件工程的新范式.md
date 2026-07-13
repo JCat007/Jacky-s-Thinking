@@ -164,7 +164,7 @@ SQL 是否真正写入数据库？
 
 因此，我们可以把 Agent Runtime 定义为：围绕大语言模型构建的专属 Runtime 系统，全权管理模型与外部世界交互的全生命周期，涵盖状态管理、上下文调度、工具执行、异常恢复、安全治理、结果校验、全链路观测与资源治理，将无状态、概率性的大模型，转化为可稳定、可落地、可管控、可持续执行的生产级智能系统。
 
-### 1.4 Runtime 与 Harness 的区别
+### 1.5 Runtime 与 Harness 的区别
 
 很多文章把 Harness 理解为“除了模型之外的一切”，这种说法虽然容易传播，却并不准确。Harness 并不是 Runtime 的同义词。更准确地说：Harness 是 Runtime 的工程实现。
 
@@ -197,7 +197,7 @@ Harness Engineering
 
 其中，Software Engineering 关注如何设计、构建和维护一个完整的软件系统，通过编写确定性的业务逻辑来解决问题；Agent Engineering 关注如何构建能够自主理解目标、规划任务并调用工具完成工作的 Agent；Runtime Engineering 进一步关注 Agent 在真实环境中如何持续、可靠、安全地运行，包括状态管理、任务调度、错误恢复和执行治理；而 Harness Engineering 则是 Runtime Engineering 在工程实践中的具体实现方式，它通过状态管理、工具运行时、沙箱、验证、恢复、可观测性等基础设施，将 Runtime 的设计真正落地为一个生产级系统。
 
-### 1.5 案例：直观理解 4 个概念
+### 1.6 案例：直观理解 4 个概念
 
 为了更直观地理解这 4 个概念，我们以一个 Research Agent 为例。
 
