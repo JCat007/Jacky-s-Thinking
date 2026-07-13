@@ -72,10 +72,12 @@ Application
 
 Runtime 并非 AI 时代的新生概念，而是贯穿现代计算机体系的核心基础设施。几乎所有主流软件、程序、服务，都依托专属 Runtime 运行：
 
-* Java 程序依托 JVM（Java 虚拟机）Runtime 运行；
-* JavaScript 依托浏览器、Node.js Runtime 运行；
-* Python 依托 CPython Runtime 运行；
-* 容器化服务依托 Container Runtime 运行。
+```
+Java 程序依托 JVM（Java 虚拟机）Runtime 运行；
+JavaScript 依托浏览器、Node.js Runtime 运行；
+Python 依托 CPython Runtime 运行；
+容器化服务依托 Container Runtime 运行。
+```
 
 Runtime 的核心职责不包含具体业务逻辑，其唯一使命是：为程序提供稳定、持续、可管控的运行环境，保障程序生命周期完整可控。
 
