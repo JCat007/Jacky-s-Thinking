@@ -35,7 +35,7 @@ AI 行业的核心竞争逻辑，已经完成一次关键迁移：​从模型�
 
 读懂这一逻辑，便能厘清未来 Agent 架构的核心演进方向，也能理解行业共识：​未来 AI 软件的核心竞争力，不取决于是否拥有超大参数模型，而取决于是否拥有成熟、可靠、可迭代的 Runtime 基础设施​。
 
-### 本文核心研究问题
+### 0.1 本文核心研究问题
 
 当前行业对 Agent Runtime 存在大量认知混淆：有人将其等同于 Prompt 升级，有人将其等价于 Context，也有人将所有 Agent 基础设施统称为 Harness。为厘清概念边界、建立体系化认知，本文将围绕五大核心问题展开论述：
 
@@ -310,4 +310,143 @@ Runtime Engineering 告诉我们：系统应该具备状态管理、恢复、验
 
 理解 Runtime，才能理解为什么 Prompt Engineering 和 Context Engineering 已经不足以支撑今天的 Agent；也才能理解，为什么越来越多的团队开始讨论 Harness Engineering。
 
+## 第二章 ｜Prompt、Context、Harness 与 Runtime：AI 工程的控制边界演进
 
+近年 AI 工程领域涌现出大量新概念：Prompt Engineering、Context Engineering、Harness Engineering、Runtime Engineering、Agent Engineering。这些概念常被混用、误解，普遍存在「新范式替代旧范式」的认知偏差。
+
+事实上，五者并非迭代替代关系，而是工程控制边界持续向外扩张、能力逐层包含的层级体系。生产级 Agent 的落地，需要同时依赖所有范式，缺一不可。技术演进的核心本质，是开发者可管控的系统边界（Engineering Scope）持续扩大，工程精细化程度持续提升。
+
+### 2.1 Prompt Engineering：控制单次模型推理
+
+大模型落地初期，Prompt 是开发者唯一可干预、可调控的核心变量。Prompt Engineering 的核心命题是：如何精准引导模型的单次推理行为，输出符合预期的结果。
+
+其核心能力覆盖：指令设计、角色设定（Role Prompt）、少样本学习（Few-shot Learning）、思维链引导（Chain of Thought）、输出格式约束、示例标准化。核心目标极致聚焦于优化单次模型推理（Single Inference）的输出质量。
+
+此阶段的工程控制范围极小，整个控制范围可以表示为：
+
+```
+User
+│
+Prompt
+│
+LLM
+│
+Output
+```
+
+仅覆盖「用户输入-Prompt-模型输出」的单次链路，模型之外的运行、执行、异常问题完全无法管控，仅能满足简单聊天机器人场景，无法支撑复杂 Agent 任务。
+
+### 2.2 Context Engineering：控制模型能看到什么
+
+随着 Agent 开始调用工具、接入知识库、承载多轮长期对话，行业发现：真正决定模型推理质量的，并非 Prompt 话术本身，而是模型可感知、可调用的全部信息。由此，Context Engineering 正式成为核心工程范式。
+
+相较于 Prompt Engineering，Context Engineering 大幅拓宽了管控边界，不再局限于 Prompt 话术，而是统筹管理模型的全部输入信息，涵盖：检索增强知识库（RAG）、长期记忆、对话历史、文件上下文、工具描述、环境状态、上下文压缩、Token 预算管控。
+
+Prompt 只是 Context 的一部分，整个系统变成了：
+
+```
+Knowledge
+Memory
+History
+Files
+Tools
+Environment
+     │
+     ▼
+ Context Builder
+     │
+     ▼
+     LLM
+```
+
+此时，工程师开始控制模型输入，而不仅仅是 Prompt。
+
+Context Engineering 的核心命题从「模型应该怎么回答」升级为模型应该知道什么、感知什么，彻底解决模型信息缺失、视野局限导致的推理偏差问题，是 AI 工程的一次巨大进步。
+
+### 2.3 Harness Engineering：控制模型的落地行动
+
+然而，当 Agent 真正开始工作以后，仅仅管理输入已经不够了。模型不仅需要思考。它还需要调用工具、修改文件、执行 Shell、浏览网页、控制浏览器、操作数据库、协调多个 Agent 等。
+
+于是，新的问题出现了。例如：
+
+```
+如果 Tool 超时怎么办？
+如果 JSON 不合法怎么办？
+如果 Browser 崩溃怎么办？
+如果 API 调用失败怎么办？
+如果 Agent 中途退出怎么办？
+```
+
+Context 无法回答这些问题。因为这些问题都发生在模型推理之后。于是，Harness Engineering 出现了。
+
+Harness Engineering 的核心命题是：如何管控模型的落地行动，保障推理意图可靠转化为真实执行动作。其核心能力覆盖：工具 Runtime 调度、失败重试、断点恢复、沙箱隔离、任务调度、权限管控、结果校验、全链路观测。
+
+整个系统开始变成：
+
+```
+Context
+           │
+           ▼
+          LLM
+           │
+           ▼
+────────────────────────
+ Harness Runtime
+────────────────────────
+
+Tool Execution
+
+Retry
+
+Recovery
+
+Verification
+
+Sandbox
+
+Permission
+
+Telemetry
+```
+
+综上，Prompt 管控单次话术、Context 管控单次推理输入、Harness 管控单次落地行动。
+
+### 2.4 Runtime Engineering：控制 Agent 全生命周期
+
+如果继续扩大控制范围，你会发现 Harness 其实仍然只是 Runtime 的一部分。一个真正的 Agent Runtime，不仅需要 Harness，还需要任务规划、状态全局管理、工作流编排、事件总线、资源调度、效果评估、系统治理、持续优化等核心能力。
+
+完整的 Runtime Engineering，覆盖 Agent 从启动、执行、迭代到终止的全生命周期。Runtime Engineering 回答的是“如何让 Agent 长期、稳定、自适应、可持续地运行”。因此，Runtime 的控制范围已经变成：
+
+```
+目标（Goal）
+
+↓
+
+感知（Observe）
+
+↓
+
+推理（Reason）
+
+↓
+
+执行（Act）
+
+↓
+
+验证（Verify）
+
+↓
+
+恢复（Recover）
+
+↓
+
+学习（Learn）
+
+↓
+
+下一轮循环（Next Loop）
+```
+
+在这一体系中，大模型只是其中的一个节点，Runtime 负责整个循环。
