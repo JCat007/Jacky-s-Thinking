@@ -294,7 +294,7 @@ Runtime Engineering 告诉我们：系统应该具备状态管理、恢复、验
 
 从这个 Research Agent 的例子来看，四者之间并不是替代关系，而是层层递进、各司其职：Software Engineering 负责整个产品，Agent Engineering 负责智能，Runtime Engineering 负责运行，Harness Engineering 负责实现。
 
-#### 1.7 从"写代码"到"构建 Runtime"
+### 1.7 从"写代码"到"构建 Runtime"
 
 软件工程师的工作正在发生改变。
 
@@ -302,7 +302,7 @@ Runtime Engineering 告诉我们：系统应该具备状态管理、恢复、验
 
 模型决定智能，Runtime 决定智能能否真正落地，而 Harness Engineering 正是连接这两者的桥梁。
 
-#### 小结
+### 小结
 
 在传统软件中，Runtime 往往隐藏在语言或操作系统之下，很少成为开发者关注的对象。
 
