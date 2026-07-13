@@ -1,2 +1,4 @@
 # Jacky-s-Thinking
-Articles Featuring Jacky’s Latest Reflections
+## License
+This work is licensed under the 
+[Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org).
