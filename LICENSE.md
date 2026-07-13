@@ -1,6 +1,5 @@
 Copyright (c) [2026] [Jacky Chan]
 
---------------------------------------------------------------------------------
 【English Version】
 
 All articles and textual content in this repository are licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
