@@ -957,3 +957,116 @@ Goal（目标定义）
 Prompt 决定模型如何思考，Runtime 决定模型何时思考、何时行动、何时停止、何时纠错。
 
 如果说上一章回答的是"Runtime 由哪些能力组成"，那么这一章回答的则是"Runtime 为什么能够让 Agent 从 Demo 走向 Production"。真正的关键并不在于增加了更多工具，而在于 Runtime 建立了一套围绕状态、执行、治理、验证与恢复的运行机制，把模型不可避免的随机性包裹在一个可管理、可恢复、可验证的工程系统之中。也正因为如此，Runtime Engineering 与传统的软件架构开始越来越接近分布式系统、操作系统和云平台，而不再只是 AI 应用的一层工具封装。
+
+# 第六章 ｜Runtime Engineering 的七条设计原则
+
+如果说 Harness 描述的是 Runtime 的工程实现，那么设计原则（Principles）决定的，就是 Runtime 的工程哲学。
+
+过去几十年的软件工程中，每一次重要的技术演进，都伴随着一套新的设计原则。这些原则并不是某一种框架的实现细节，而是跨越语言、平台和产品的共同方法论。Runtime Engineering 也是如此：不同团队可以采用不同的 Agent Framework、不同的大语言模型、不同的部署架构，但一个能够长期稳定运行的 Agent Runtime，最终都会遵循一些共同的原则。
+
+本文将它们总结为七条设计原则。
+
+### 原则一：永远不要相信模型（Never Trust the Model）
+
+这是 Runtime Engineering 的第一性原则。
+
+传统软件开发中，我们默认相信程序。因为程序是确定性的，如果代码正确，程序就应该正确。但是，大语言模型不是代码，它本质上是一个概率模型。即使在完全相同的输入下，也可能产生不同的输出。更重要的是，它会犯错，而且这种错误没有固定模式。
+
+因此，Runtime 的默认假设应该是：模型随时可能出错。
+
+这并不是否定模型，而是承认概率系统的客观特性。所以，所有关键操作都应该建立在验证（Verification）而不是信任（Trust）之上。例如：
+
+```Plain
+模型说“测试通过了”，不代表真的通过，应重新运行测试；
+模型说“文件已经修改完成”，不代表真的成功，应检查文件系统；
+模型说“邮件已经发送”，不代表真的发出，应确认 API 返回结果。
+```
+
+“永远不要相信模型”是 Runtime 与传统 AI 应用最大的分界线。
+
+### 原则二：状态永久归属 Runtime（State Lives Outside the LLM）
+
+很多刚入门的开发者都会犯一个错误：希望模型自己记住状态。
+
+对于生产级 Agent，这几乎一定会导致系统失控。因为模型无法保证长期一致地维护复杂状态。真正可靠的状态应该完全由 Runtime 管理，包括当前任务阶段、 已完成的步骤、 工具调用历史、 中间产物（Artifacts）、 检查点（Checkpoint）、长期记忆（Memory）、 环境状态（Environment）等。
+
+LLM 仅作为无状态推理引擎，按需读取状态快照，不参与状态维护与迭代。这种做法有助于彻底规避模型失忆、状态错乱、任务断层等问题，保障运行一致性。
+
+### 原则三：全链路可观测（Everything Must Be Observable）
+
+在传统软件中，出现 Bug 时，我们至少可以查看日志。如果一个 Agent 无法解释“为什么调用这个工具”、“为什么删除这个文件”、“为什么修改这段代码”、“为什么提前结束任务”，那么，这个 Agent 基本无法进入生产环境。因此，一个成熟的 Runtime 必须记录完整的运行轨迹。不仅记录工具调用，还要记录 Prompt、上下文、记忆注入、模型决策、Planner 输出、工具调用结果、校验结果、Token 消耗、延迟、成本等。
+
+全链路可观测的对象，不只是系统，还包括 Agent 的决策过程。未来的 Runtime，更像一个飞行记录仪（Flight Recorder），能够完整重放 Agent 的整个思考和执行过程。
+
+### 原则四：全场景可恢复（Everything Must Be Recoverable）
+
+模型、工具、网络、服务的失败是常态。Runtime 必须面向失败设计，所有关键执行步骤支持重试（Retry）、恢复（Resume）、回滚（Rollback）、断点续跑（Checkpoint）、任务重放（Replay）。例如：一个 Coding Agent 修改了 50 个文件后中断，不应该重新开始，而应该从最近的检查点继续；一个 Research Agent 搜索了 100 个网页，不应该因为最后一步失败而全部重来。
+
+恢复能力，本质上决定了 Agent 能否承担长时间运行的复杂任务。
+
+### 原则五：核心结果可验证（Everything Important Must Be Verifiable）
+
+这一条原则与第一条相互呼应。
+
+模型可以提出假设，但 Runtime 必须验证事实。所有影响业务结果的核心操作，必须具备客观验证手段，依托真实环境、业务规则、硬件反馈、标准化用例完成结果核验，确保任务完成状态真实有效，杜绝虚假闭环。
+
+例如，当模型说“我已经完成”，Runtime 应该验证“任务是否真的完成”，比如：
+
+```Plain
+代码是否通过编译； 
+单元测试是否全部通过； 
+网页是否真的提交成功； 
+数据是否真正写入数据库； 
+文件内容是否符合预期； 
+API 是否返回成功状态。
+```
+
+未来，Verification 很可能会成为 Runtime 中独立的一层。这也是越来越多 Agent 系统开始引入 Verifier、Judge、Critic 等组件的重要原因。
+
+### 原则六：安全是 Runtime 的原生能力（Security Is a Runtime Capability）
+
+很多 Agent 系统喜欢在最后加一层安全过滤。这种做法在 Demo 中可以工作，但在生产环境中远远不够。真正的 Runtime，应该把安全内置到每一个环节。例如：
+
+```Plain
+模型产生工具调用意图之前，可以限制工具暴露范围；
+工具执行之前，可以检查权限；
+执行过程中，可以限制资源；
+执行之后，可以审计结果。
+```
+
+安全不应该只是一个后置插件，它应该成为 Runtime 全生命周期的原生能力。这也是为什么现在的 Runtime 越来越强调规则引擎（Policy Engine）、 沙箱隔离（Sandbox）、 最小权限（Least Privilege）、 操作审批（Human Approval）、审计溯源（Audit Log）等。所有 Runtime 的设计者都应该从源头规避模型越权、恶意调用和数据泄露的风险。
+
+### 原则七：Runtime 全权掌控生命周期（The Runtime Owns the Lifecycle）
+
+模型仅负责单次推理思考，Agent 的启动、运行、暂停、恢复、终止、迭代全流程生命周期，由 Runtime 全权管控。Runtime 决定 Agent 的运行节奏、执行边界、容错策略，是 AI 系统的核心掌控者。
+
+### 小结
+
+七大核心原则相互联动、形成闭环，构成 Runtime Engineering 的底层工程哲学：
+
+```Plain
+Runtime 设计原则（Runtime Principles）
+
+            永远不要相信模型
+           （Never Trust the Model）
+                     │
+      ┌──────────────┼──────────────┐
+      ▼              ▼              ▼
+状态归属 Runtime   全链路可观测     原生的安全能力
+（State Outside   （Everything     （Security by
+   the LLM）       Observable）      Default）
+      │              │
+      ▼              ▼
+全场景可恢复        全场景可验证
+（Everything      （Everything
+ Recoverable）     Verifiable）
+       \            /
+        \          /
+         └────────┘
+              ▼
+      Runtime 管理整个生命周期
+   （Runtime Owns the Lifecycle）
+```
+
+Runtime 的核心逻辑并非杜绝模型错误，而是通过标准化的工程约束，让概率性智能系统拥有可预测、可管控、可容错、可迭代的确定性运行秩序。
+
