@@ -741,7 +741,7 @@ Next Loop（循环迭代）
 
 如果进一步抽象 Runtime，会发现几乎所有生产级 Agent，无论采用哪种框架，都离不开六类核心能力。它们共同组成了 Harness 的骨架：
 
-```Markdown
+```
 Harness Runtime
 
         ┌──────────────────────────────┐
