@@ -643,4 +643,317 @@ Foundation Model（基础模型层）
 
 而在 Runtime Engineering 的众多能力中，有一套实践正在逐渐形成行业共识，它负责组织 Runtime、约束模型行为、协调工具、恢复失败、管理状态，并将各种运行能力整合为一个完整的系统。这套实践，就是近年来越来越受到关注的 Harness Engineering​。
 
+## 第四章 ｜Harness Engineering：Runtime 的落地工程实现
 
+### 4.1 Harness Engineering 核心定义
+
+经过前面几章，我们已经建立了一个新的认知。
+
+Prompt Engineering 解决的是：
+
+> 如何让模型更好地思考。
+
+Context Engineering 解决的是：
+
+> 如何让模型拥有正确的信息。
+
+Runtime Engineering 解决的是：
+
+> 如何让 Agent 持续运行。
+
+那么，一个新的问题自然出现：
+
+> **Runtime 应该如何构建？**
+
+或者说：
+
+如何把一个本质上无状态、非确定性的 LLM，变成一个能够持续完成真实任务的 Agent？
+
+这正是 Harness Engineering 希望回答的问题。
+
+因此，本文将 Harness Engineering 定义为：Harness Engineering 是 Runtime 理论体系落地生产环境的工程实现方法论，它通过构建状态管理、执行控制、工具运行、验证恢复、安全治理与可观测等基础能力，让概率性的模型运行在确定性的工程系统之中。
+
+这里有两个关键词。
+
+第一个：Runtime。Harness 不是模型，它运行在模型之外。
+
+第二个：Engineering。Harness 不是一个框架，不是一个 SDK，也不是某个具体产品，它是一套工程思想。
+
+无论是 Claude Code、OpenAI Responses API、Google Agent Engine，还是各种企业内部 Agent 平台，本质上都在实现同一件事情：构建一个能够管理模型运行过程的 Runtime。
+
+### 4.2 Harness 的目标：把"思考"变成"执行"
+
+大语言模型最擅长的是 Reasoning（推理），而真实世界真正需要的是 Execution（执行）。这两者之间，存在着一条巨大的鸿沟。例如：
+
+模型知道应该修改代码，但是它不会真正修改 Git；
+
+模型知道应该调用数据库，但是它不会真正连接数据库；
+
+模型知道应该打开浏览器，但是它不会真正控制浏览器；
+
+模型知道应该重试，但是它不知道什么时候应该停止。
+
+因此，Harness 的第一职责就是把 Reasoning（推理）转换成 Execution（执行），它不断把模型产生的意图翻译成真实世界可以执行的动作，让模型的智能真正转化为有效业务价值。
+
+### 4.3 生产级 Agent Runtime 到底在运行什么
+
+很多人理解 Runtime，都会想到 Tool Calling（工具调用）。其实 Tool Calling 只是 Runtime 最小的一部分。如果把 Agent 的一次完整运行拆开来看，真正发生的事情类似这样：
+
+```Plain
+Goal（目标）
+ │
+ ▼
+Observe（感知）
+ │
+ ▼
+Context Assembly（上下文组装）
+ │
+ ▼
+Reason (推理，唯一的 LLM 环节)
+ │
+ ▼
+Plan（任务规划）
+ │
+ ▼
+Tool Execution（工具执行）
+ │
+ ▼
+Verification（结果校验）
+ │
+ ▼
+State Update（状态更新）
+ │
+ ▼
+Memory Update（记忆迭代）
+ │
+ ▼
+Recovery（异常恢复）
+ │
+ ▼
+Next Loop（循环迭代）
+```
+
+这里真正属于 LLM 的环节只有 Reasoning​。​剩下的所有步骤，全部属于 Runtime。也就是说，生产环境里的 Agent，大部分时间其实根本没有在调用模型，而是在等待、执行、恢复、验证、保存、调度等。
+
+这也是为什么很多企业内部统计都会发现：模型推理时间，只占整个 Agent 生命周期的一小部分；更多的工程复杂性来自模型之外的运行过程。
+
+### 4.4 Harness 的六大核心运行职责
+
+如果进一步抽象 Runtime，会发现几乎所有生产级 Agent，无论采用哪种框架，都离不开六类核心能力。它们共同组成了 Harness 的骨架：
+
+```Markdown
+Harness Runtime
+
+        ┌──────────────────────────────┐
+
+            State（状态管理）
+
+            Execution（执行管理）
+
+            Governance（安全治理）
+
+            Verification（结果校验）
+
+            Observation（全链路观测）
+
+            Optimization（动态优化）
+
+        └──────────────────────────────┘
+```
+
+注意，这里没有按照 Memory、Planner、Tool 这样的模块划分。因为那些都是实现，而不是职责。我认为 Runtime 更应该按照职责（Responsibility）进行划分。如此一来，无论未来框架怎样变化，整个理论都不会失效。
+
+#### 职责一：State（状态管理）
+
+大模型本质是无状态推理引擎，每一次推理都是独立的概率计算，无法自主维护任务进度、环境状态与历史信息。所有核心状态必须由 Runtime 统一托管，涵盖任务阶段、工作流进度、长期记忆、检查点、会话信息、环境变量、执行产物。
+
+状态管理是断点续跑、任务重放、异常恢复、长周期运行的基础，是整个 Runtime 体系的核心地基。
+
+#### 职责二：Execution（执行管理）
+
+Execution 负责把模型的意图，真正变成动作，涵盖文件操作、浏览器调度、Shell 命令、数据库读写、API 调用、子 Agent 协同。
+
+Execution 回答的是：模型如何影响真实世界？
+
+这里最重要的一点是，LLM 永远不会直接操作世界。所有模型操作意图，必须经过 Runtime 的参数校验、权限校验、超时控制、失败重试、日志埋点后执行。
+
+因此，Harness 天然成为 Agent 与世界之间的边界层（Boundary Layer），隔绝模型的不确定性，保障执行可控。
+
+#### 职责三：Governance（安全治理）
+
+传统软件治理的是用户，Agent 治理的是模型。例如：
+
+哪些工具允许调用？
+
+哪些文件允许修改？
+
+哪些 API 禁止访问？
+
+哪些操作需要人工审批？
+
+哪些 Prompt 属于注入攻击？
+
+这些全部属于 Governance。
+
+随着 Agent 具备浏览器操作、数据库读写、服务器操控、支付调用等高风险能力，必须通过 Runtime 实现全维度治理：工具权限管控、文件操作白名单、高危操作拦截、人工审批机制、操作审计、资源配额限制、安全隔离。
+
+Governance 的核心不是限制智能，而是管控风险，让模型在安全边界内自主工作。
+
+#### 职责四：Verification（结果校验）
+
+我认为这是未来 Runtime 最重要的一层。如果 Agent 今天仍然相信模型说“完成了”，于是任务结束，这是非常危险的。Runtime 真正应该做的是永远不要相信模型（Never Trust the Model）。
+
+当模型说“成功”时，Runtime 应该去验证。例如：
+
+Git 是否真的提交？
+
+文件是否真的存在？
+
+SQL 是否真的执行？
+
+网页是否真的打开？
+
+单元测试是否真的通过？
+
+结果校验正在逐渐成为 Agent Runtime 的核心。很多国外团队已经开始提出 Verifier（结果校验）比 Reflection（自我反思）更重要。因为相较于依赖模型的自我反思（Reflection），独立的硬件级、环境级校验（Verifier）能够彻底规避模型幻觉，是生产级 Agent 的落地基础。
+
+#### 职责五：Observation（全链路观测）
+
+Agent 不仅需要复刻传统软件的日志、链路追踪、指标监控体系，同时还需要全覆盖记录 Prompt 内容、上下文组装、模型决策、工具调用、记忆读写、资源消耗、延迟数据、成本指标。
+
+Observation 回答的是“Agent 为什么这样行动”。只有拥有完整的观测体系，Runtime 才能有条理地进行任务重放、问题 Debug、性能优化、行为追溯，这是 Agent 可运维、可迭代的核心前提。
+
+#### 职责六：Optimization（动态优化）
+
+在保障正确性的基础上，持续优化 Runtime 运行效率，涵盖任务调度、缓存策略、Token 预算管控、并行任务处理、队列管理、负载均衡、成本管控、自适应规划等。
+
+Optimization 关注“如何让 Runtime 越来越高效”，而不仅仅是“越来越正确”，最终支持 Agent 能够稳定、高效、低成本地运行。
+
+### 小结
+
+随着模型能力持续迭代，规划（Planner）、记忆（Memory）、基础工具调用（Tool/Function Calling）等能力会逐步下沉至模型内部，但状态管理（State）、结果校验（Verification）、安全治理（Governance）、全链路观测（Observation）、异常恢复（Recovery）等工程能力，永远无法被模型替代。
+
+因此，Harness 的精准定义并非「模型之外的所有能力」，而是「一套对模型进行生命周期管理、行为约束、结果校验、风险治理的标准化工程体系」。
+
+如果说 Prompt Engineering 是帮助模型思考，Context Engineering 是帮助模型理解，那么 Harness Engineering 的任务，则是帮助模型在真实世界中可靠地工作。它不是一个新的 Prompt 技巧，也不是一个新的 Agent Framework，而是一套围绕 Runtime 构建的软件工程方法论。它关注的是如何让一个本质上概率性的智能系统，在长时间、多步骤、多工具、多主体协作的环境中，依然保持稳定、可恢复、可验证和可治理。
+
+## 第五章 ｜Runtime 如何管理概率：生产级 Agent 的四大运行机制
+
+前文已厘清 Runtime 的价值与 Harness 的落地逻辑，本章聚焦核心问题：Runtime 如何从工程层面，将概率性的模型推理，转化为确定性的系统运行，实现 Agent 从 Demo 到生产的质变？
+
+答案的核心不在于框架与模型，而在于一套标准化、通用化的运行机制。Runtime Engineering 必须接受一个现实：模型一定会犯错。因此，它的目标不是消除错误，而是在错误发生之后，依然能够保证整个系统继续运行。围绕这一目标，几乎所有成熟的 Agent Runtime，都包含以下四种共同的机制：
+
+（1）状态管理（State）
+
+（2）执行控制（Execution）
+
+（3）治理约束（Governance）
+
+（4）验证恢复（Verification & Recovery）
+
+它们共同构成了生产级 Agent 最重要的运行能力。
+
+### 5.1 状态管理机制（State）
+
+我们先来看一个最简单的问题：为什么 ChatGPT 每次刷新页面以后，就像失忆了一样？
+
+原因很简单。因为 LLM 本身没有状态。每一次推理，都是一次新的向前传播（Forward Pass）。模型不会记住刚才执行了哪个工具；不会记住 Shell 执行到哪里；不会记住 Browser 已经打开了几个 Tab；不会记住数据库已经修改了哪些内容。
+
+真正保存这些信息的只能是 Runtime。因此，生产级 Agent 的第一原则就是：把状态存储在模型之外（State Outside LLM）。所有状态如任务状态、环境状态、记忆状态、执行产物，全部放在 Runtime。这些状态共同描述了 Agent 当前到底运行到了哪里。模型仅读取状态快照，不维护任何持久化状态。
+
+这也是为什么越来越多 Runtime 开始采用事件溯源（Event Sourcing）、状态存储（State Store）、检查点（Checkpoint）等传统分布式系统的设计思想，因为 Agent 已经开始成为一个长期运行的分布式进程。
+
+### 5.2 执行控制机制（Execution）
+
+Agent 最大的价值来自行动，但行动也是风险最大的地方。
+
+模型可以说“删除整个目录”，但真正删除目录的却不能是模型，而应该是 Runtime。因此，Execution 的职责并不是执行命令，而是管理执行。一个成熟的 Runtime 通常都会在模型和工具之间加入完整的控制层。例如：
+
+```Plain
+大语言模型（LLM）
+        ↓
+任务意图（Intent）
+        ↓
+运行时（Runtime）
+        ↓
+权限校验（Permission）
+        ↓
+工具适配（Tool Adapter）
+        ↓
+重试机制（Retry）
+        ↓
+超时控制（Timeout）
+        ↓
+工具执行（Execution）
+        ↓
+执行结果（Result）
+```
+
+这样做的意义在于，模型仅能生成操作意图，绝对不能直接作用于真实世界。Runtime 在模型与工具之间搭建完整的控制链路：模型意图输出 → Runtime 权限校验 → 工具适配 → 超时控制 → 失败重试 → 结果返回。这套机制将简单的工具调用（Tool Calling）升级为工具治理（Tool Governance），杜绝模型越权操作、误操作、无效操作，让执行过程可管控、可追溯、可兜底。
+
+### 5.3 安全治理机制（Governance）
+
+这是过去一年国外 Runtime 讨论最多的话题之一。因为越来越多 Agent 已经可以操作浏览器、邮件、数据库，并且具有支付能力等，它们开始真正影响现实世界。因此，传统的软件权限模型已经不够用了。未来 Runtime 更像
+
+操作系统（Operating System），所有能力都必须经过系统规则（Policy）。
+
+Governance 的目标可以总结成一句话：不要相信模型（Never Trust the Model），只相信系统规则。
+
+### 5.4 验证与恢复机制（Verification & Recovery）
+
+这是未来 Runtime 最重要的一部分。
+
+过去很多 Agent 都让模型自我反思（Reflection），模型自己检查自己写得对不对。但是，越来越多团队开始发现，Reflection 有天然局限，因为它仍然来自于模型。模型判断模型，本质上还是概率。因此，越来越多 Runtime 开始增加验证层（Verifier）。例如：
+
+```Plain
+代码生成以后，自动运行测试；
+网页填写以后，自动截图；
+数据库修改以后，自动查询；
+Browser 操作以后，自动 OCR；
+Git Commit 以后，自动 Diff。
+```
+
+Runtime 不再相信模型说“完成了”，而是自己验证。Verification 开始逐渐代替 Reflection。这是 Runtime 最大的一次变化。
+
+当然，验证以后仍然可能失败。于是恢复机制（Recovery）出现，包括：重试（Retry/Resume）、回滚（Rollback）、断点续跑（Checkpoint）、任务重放（Replay）、人工兜底（Human Approval）、降级策略（Fallback Model），任务修复（Plan Repair）、子任务重试（Sub-task Retry）、Agent 重启（Agent Restart）等，覆盖全场景失败 case，让 Agent 能够应对各类异常，持续运行不崩盘。
+
+有意思的是，这些机制全部来自传统分布式系统。Agent Runtime 第一次开始大量借鉴数据库、Kubernetes、Workflow Engine、消息队列的理念。原因很简单：这些系统过去几十年一直在解决失败，今天 Agent 终于开始遇到同样的问题。
+
+### 5.5 四种机制共同形成 Runtime 闭环
+
+如果把前面的内容放到一起，一个生产级 Runtime 的核心循环大致如下：
+
+```Plain
+Goal（目标定义）
+                  │
+                  ▼
+            Planner（LLM 规划决策）
+                  │
+                  ▼
+         Execution Controller（Runtime 执行管控）
+                  │
+                  ▼
+          Tool / Environment（工具/环境落地）
+                  │
+                  ▼
+             Verifier（客观结果校验）
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+      Success            Failure
+        │                   │
+        ▼                   ▼
+   State Update        Recovery Engine
+        │                   │
+        └─────────┬─────────┘
+                  ▼
+            Next Iteration（持续运行）
+```
+
+在这个完整的闭环中，模型仅承担规划推理的单一职责，所有稳定性、可靠性、安全性、韧性保障，全部由 Runtime 四大机制承接。
+
+### 小结
+
+Prompt 决定模型如何思考，Runtime 决定模型何时思考、何时行动、何时停止、何时纠错。
+
+如果说上一章回答的是"Runtime 由哪些能力组成"，那么这一章回答的则是"Runtime 为什么能够让 Agent 从 Demo 走向 Production"。真正的关键并不在于增加了更多工具，而在于 Runtime 建立了一套围绕状态、执行、治理、验证与恢复的运行机制，把模型不可避免的随机性包裹在一个可管理、可恢复、可验证的工程系统之中。也正因为如此，Runtime Engineering 与传统的软件架构开始越来越接近分布式系统、操作系统和云平台，而不再只是 AI 应用的一层工具封装。
