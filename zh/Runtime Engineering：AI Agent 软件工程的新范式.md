@@ -1,5 +1,7 @@
 # Runtime Engineering：AI Agent 软件工程的新范式
 
+[English Version](https://github.com/JCat007/Jacky-s-Thinking/blob/main/en/Runtime%20Engineering%3A%20A%20New%20Paradigm%20for%20AI%20Agent%20Software%20Engineering.md)
+
 ## 前言 ｜AI 软件正在进入 Runtime 时代
 
 
