@@ -48,3 +48,247 @@ The industry currently suffers from widespread cognitive confusion regarding Age
 5. Why will Runtime Engineering become the mainstream new paradigm for AI software engineering?
 
 Through systematic elaboration, readers will comprehensively grasp the core logic of Harness Engineering and understand the fundamental inevitability of Runtime emerging as the core infrastructure for AI Agents from the macro perspective of software engineering evolution.
+
+## Chapter 1 | What is Agent Runtime: The Core Layer for Model Practical Deployment
+
+In the early stage of LLM popularization, the industry adopted an extremely simple and unified AI application architecture, fully adapted to chatbot interaction patterns:
+
+```plain
+Application
+      │
+      ▼
+     LLM
+```
+
+The application receives user requests, forwards them to the large model, and returns model-generated results directly to users. It operates in a single-inference, single-response closed-loop workflow with no subsequent executions.
+
+Based on this simplistic architecture, many people hold a natural misunderstanding: Agents are merely upgraded applications built on basic LLMs with added prompt templates, tool calls, and simple workflows.
+
+However, as Agents undertake increasingly complex tasks, this perception can no longer explain real-world AI system operations. A software development Agent running continuously for hours, or a research Agent capable of autonomous web browsing, data analysis, API invocation, and multi-subtask management, operates in a far more complex manner than a single model inference process.
+
+In fact, in any production-grade Agent, LLMs only participates in a small portion of the entire lifecycle.
+
+Most of the system’s operational time is dedicated to non-model tasks: continuous task state maintenance, multi-round tool scheduling, external system result waiting, dynamic context window management, long-term memory reading and writing, execution result validity verification, exception capture and fault tolerance recovery, and task resumption and termination decision-making. These tasks are not performed by the model; together, they constitute the complete Runtime system of AI Agents.
+
+### 1.1 Runtime: A Classic Core Concept in Computer Systems
+
+Runtime is not an emerging concept exclusive to the AI era, but a core infrastructure underpinning modern computer systems. Almost all mainstream software, programs, and services run on dedicated Runtime environments:
+
+```plain
+Java programs run on the JVM (Java Virtual Machine) Runtime;
+JavaScript runs on browser and Node.js Runtime environments;
+Python runs on the CPython Runtime;
+Containerized services run on Container Runtime.
+```
+
+The core responsibility of Runtime excludes specific business logic. Its sole mission is to provide stable, continuous, and manageable operating environments for programs, ensuring full controllability of program lifecycles.
+
+Generic Runtime features a standardized set of core capabilities, including lifecycle management, memory resource scheduling, persistent state maintenance, exception capture and recovery, security isolation, IO management, and full-link observability. The business logic coded by developers essentially runs on top of Runtime infrastructure, and Runtime stability directly determines the operational quality of business programs.
+
+### 1.2 AI Agents Also Require Dedicated Runtime
+
+An Agent is essentially a type of program. The key difference is that its "business logic" is not fully coded by developers, but partially delegated to large language models.
+
+This introduces a fundamental new challenge.
+
+Traditional programs feature deterministic control flows. For example:
+
+```python
+if success:
+    next_step()
+else:
+    retry()
+```
+
+Developers can accurately predict subsequent program behaviors. In contrast, an Agent’s core decisions, execution paths, and tool selections are dynamically inferred by the LLM, such as:
+
+```plain
+Which tool should be invoked next?
+Should the system continue searching?
+Is task replanning required?
+Should the current task be terminated?
+```
+
+These decisions are not hard-coded but dynamically generated.
+
+For the first time in software history, a new structural paradigm has emerged: control flows no longer belong exclusively to code, but partially reside within models. This demands expanded responsibilities for Runtime: it must manage not only programs but also model behaviors.
+
+### 1.3 What a Production-Grade Agent Actually Runs
+
+A breakdown of the Agent lifecycle reveals a recurring operational loop:
+
+```plain
+Goal
+      │
+      ▼
+Observe
+      │
+      ▼
+Reason
+      │
+      ▼
+Act
+      │
+      ▼
+Verify
+      │
+      ▼
+Recover / Learn
+      │
+      └──────────────┐
+                     ▼
+                Next Iteration
+```
+
+Among all links, only the "Reason" phase relies on the LLM. All other steps are fully dependent on Runtime:
+
+​**1. Observe Phase**​: The Runtime collects context information, retrieves long-term memory, acquires tool status, organizes environmental data, and constructs the final prompt. The LLM has no awareness of the sources of this information.
+
+​**2. Act Phase**​: The model only generates intent instructions such as `search()`. The Runtime executes the actual invocation, including parameter verification, permission checking, tool routing, timeout control, retry mechanisms, and log recording.
+
+​**3. Verify Phase**​: Even if the model determines a task is "completed", the Runtime independently verifies actual execution results, for example:
+
+```plain
+Were file modifications successfully applied?
+Did the API return a 200 status code?
+Have all unit tests passed?
+Was the SQL statement truly written to the database?
+```
+
+Without an independent verification phase, Agents cannot be deployed to production environments.
+
+​**4. Recover Phase**​: In the event of execution failures, API timeouts, format exceptions, and other anomalies, the Runtime autonomously decides whether to trigger retries, rollbacks, breakpoint resumptions, manual intervention, or task termination.
+
+### 1.4 Core Definition of Agent Runtime
+
+Many beginners mistakenly equate Runtime with memory management, tool calling, or prompting capabilities. In fact, these are only partial functionalities of Runtime. The broader responsibility of Runtime is to govern all interactions between models and the real world, including state management, execution management, resource management, permission control, error recovery, scheduling, verification, and observability.
+
+Accordingly, Agent Runtime can be defined as a dedicated Runtime system built around large language models, which fully manages the entire lifecycle of interactions between models and external environments. It covers state management, context scheduling, tool execution, exception recovery, security governance, result verification, full-link observation, and resource governance, transforming stateless, probabilistic LLMs into stable, deployable, manageable, and continuously executable production-grade intelligent systems.
+
+### 1.5 Differences Between Runtime and Harness
+
+Many articles simplistically define a Harness as "everything except the model". While easy to disseminate, this definition is inaccurate. Harness is not synonymous with Runtime; more precisely, Harness is the engineering implementation of Runtime.
+
+Runtime defines the core capabilities required for Agent operation, serving as a capability standard. Harness Engineering addresses how to implement these capabilities via engineering methodologies, answering practical questions such as:
+
+```plain
+How to manage system states?
+How to organize tool invocation logic?
+How to recover from task failures?
+How to verify model outputs?
+How to ensure system security?
+How to observe and troubleshoot the entire system?
+```
+
+This paper adopts the following hierarchical logical relationship:
+
+```plain
+Software Engineering
+        │
+        ▼
+Agent Engineering
+        │
+        ▼
+Runtime Engineering
+        │
+        ▼
+Harness Engineering
+```
+
+Software Engineering focuses on designing, building, and maintaining complete software systems by coding deterministic business logic. Agent Engineering centers on constructing Agents capable of autonomously understanding goals, planning tasks, and invoking tools. Runtime Engineering further ensures the continuous, reliable, and secure operation of Agents in real environments, covering state management, task scheduling, error recovery, and execution governance. Harness Engineering is the concrete engineering practice of Runtime Engineering, which translates Runtime design specifications into production-grade systems via infrastructure such as state management modules, tool runtimes, sandboxes, verification mechanisms, recovery strategies, and observability tools.
+
+### 1.6 Case Study: Intuitive Understanding of the Four Core Concepts
+
+To clarify the differences between the four concepts intuitively, we take a research Agent as an example. Suppose a user assigns a task: *"Investigate the Agent Runtime layouts of OpenAI, Anthropic, and Google, and generate an analysis report."*
+
+While users only see a simple dialogue interface, different layers of engineering systems undertake distinct responsibilities internally.
+
+#### (1) Software Engineering: Building the Entire Product
+
+Software Engineering governs the overall software system rather than just the Agent itself, covering core development work such as:
+
+```plain
+Developing web interfaces for task input;
+Implementing user login, permission management, and task list functions;
+Storing generated reports in databases;
+Supporting PDF and Markdown export formats;
+Providing REST APIs for third-party system integration.
+```
+
+These are typical traditional software engineering tasks implemented through deterministic business logic, responsible for building the complete AI product framework.
+
+#### (2) Agent Engineering: Enabling Agents to Complete Research Tasks
+
+Agent Engineering focuses on how Agents autonomously accomplish user-defined goals. Upon receiving the research task, the Agent conducts independent planning:
+
+```plain
+① Analyze user requirements
+        ↓
+② Collect OpenAI-related information
+        ↓
+③ Collect Anthropic-related information
+        ↓
+④ Collect Google-related information
+        ↓
+⑤ Sort and organize collected data
+        ↓
+⑥ Compare the technical routes of the three companies
+        ↓
+⑦ Compile the final research report
+```
+
+To enable such capabilities, developers design prompts, task planning mechanisms, tool calling logic, memory storage modules, and self-reflection iteration strategies. Those are all core components of Agent Engineering. Its core goal is to endow Agents with autonomous task execution capabilities.
+
+#### (3) Runtime Engineering: Ensuring Stable Agent Operation
+
+A demo-level Agent only requires Agent Engineering support, but production deployment introduces new operational challenges:
+
+```plain
+How to handle server restarts during hours-long research tasks?
+How to address sudden browser crashes?
+How to avoid token budget overruns?
+How to prevent the Agent from repeatedly searching identical content?
+How to verify the authenticity and reliability of report citations?
+```
+
+These issues are unrelated to prompt design or task planning, but concern the continuous, reliable, and secure operation of Agents. Runtime Engineering addresses these problems via:
+
+```plain
+Persistent task state saving
+Execution process scheduling
+Automatic retry for failed tasks
+Breakpoint task resumption
+Final result verification
+Permission and resource budget control
+```
+
+Runtime Engineering prioritizes stabilizing and controlling the entire Agent lifecycle from task initiation to completion.
+
+#### (4) Harness Engineering: Realizing Runtime Capabilities in Practice
+
+Runtime Engineering defines the required system capabilities, while Harness Engineering specifies their concrete implementation. For the research Agent case, Harness implementation includes:
+
+```plain
+Adopting checkpoints to record research progress at each step;
+Deploying a state store for persistent task state management;
+Utilizing browser sandboxes to isolate web browsing environments;
+Integrating a retry engine for failed search requests;
+Equipping a citation verifier to validate report references;
+Implementing telemetry tools to record tool calls and model reasoning processes for troubleshooting.
+```
+
+These infrastructures collectively form the Agent Harness. The Harness does not determine *what* the Agent researches, but ensures that Runtime capabilities are implemented as a stable, production-grade operational system.
+
+In summary, Software Engineering builds the complete AI product; Agent Engineering enables Agents to master task execution logic; Runtime Engineering guarantees stable and sustainable task operation in real environments; Harness Engineering grounds all these capabilities via practical infrastructure. The four paradigms are not substitutive but progressive, with distinct and complementary responsibilities.
+
+### 1.7 From "Coding Logic" to "Building Runtime"
+
+The work paradigm of software engineers is undergoing fundamental transformation. In the past, core work focused on writing business logic; today, it increasingly centers on building operating environments. In the future, the core competitiveness of excellent Agent systems will stem not from superior model intelligence, but from mature Runtime infrastructure.
+
+Models determine AI intelligence, while Runtime determines whether such intelligence can be practically deployed. Harness Engineering serves as the critical bridge connecting model intelligence and real-world industrial implementation.
+
+### Summary
+
+In traditional software systems, Runtime is hidden beneath programming languages and operating systems, rarely attracting developer attention. In the AI Agent era, Runtime has moved from behind the scenes to the forefront. Since models lack inherent capabilities for state management, tool invocation, error recovery, and result verification, most engineering work for production-grade Agents occurs within the Runtime layer.
+
+Understanding Runtime explains why Prompt Engineering and Context Engineering are no longer sufficient to support complex Agent deployment, and why Harness Engineering has become a mainstream research focus in the industry.
