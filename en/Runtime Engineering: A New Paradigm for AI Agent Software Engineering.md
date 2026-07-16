@@ -973,4 +973,124 @@ Recoverable      Verifiable
 
 The core value of Runtime lies not in eliminating model errors, but in imposing standardized engineering constraints to bring predictable, controllable, fault-tolerant, and iterative deterministic order to probabilistic intelligent systems.
 
+## Chapter 7 | Industry Practices: Why All AI Companies Are Building Runtime
+
+The industrialization of AI Agents has advanced far faster than industry expectations over the past two years. Leading AI vendors are accelerating Agent capability deployment: OpenAI has launched ChatGPT, Responses API, and Computer Use; Anthropic continuously enhances Claude Code and enterprise-grade capabilities; Google deeply integrates AI into its cloud infrastructure; Microsoft iterates continuously on Copilot and multi-Agent systems.
+
+On the surface, these vendors adopt diverse product directions: some focus on coding, some on academic research, some on browser automation, some on multi-Agent collaboration, while others prioritize development platforms or end-user AI products.
+
+From the perspective of Runtime Engineering, however, a unified industry trend emerges: nearly all leading AI companies are investing heavily in proprietary Agent Runtime systems. The only difference lies in their prioritized Runtime capabilities, determined by their perceived core engineering challenges of Agent systems.
+
+Despite divergent product strategies, all vendors are solving the same fundamental problem: how to evolve Agents from one-off model calls into continuously running, reliable, and secure software systems.
+
+### 7.1 OpenAI: Lowering the Barrier to Agent Development
+
+OpenAI’s core focus is not to improve model intelligence, but to simplify Agent development for engineers.
+
+In the early Agent era, developers had to build and maintain full-stack operational capabilities from scratch, including browser environments, Python execution sandboxes, file system management, tool invocation, background task scheduling, and state management. With the launch of Responses API, Computer Use, Code Interpreter, and Background Tasks, these foundational Runtime capabilities are now natively provided by OpenAI’s platform.
+
+By modularizing Runtime into a universal platform, OpenAI enables all Agents to reuse standardized infrastructure, eliminating redundant development and allowing developers to focus purely on business logic:
+
+```Plain
+Runtime Platform
+
+├── State Store
+├── Scheduler
+├── Memory Management
+├── Tool Runtime
+├── Sandbox Environment
+├── Retry Engine
+├── Verifier
+├── Governance System
+├── Telemetry & Observability
+└── Event Bus
+```
+
+OpenAI’s Runtime strategy can be summarized as Runtime as a Platform, freeing developers from underlying operational governance and focusing on task definition and business implementation.
+
+### 7.2 Anthropic: Building Trustworthy Agents
+
+While OpenAI prioritizes development efficiency, Anthropic’s Runtime construction centers entirely on trustworthiness and security.
+
+The design of Claude Code reflects Anthropic’s core engineering philosophy: models are inherently error-prone. The product never blindly trusts model outputs. It verifies file modifications by reloading source files, enforces user authorization before executing high-risk terminal commands, strictly limits permission boundaries for computer operation, and continuously inspects and corrects anomalies during long-running tasks.
+
+In this architecture, LLMs only generate decision schemes, while the Runtime undertakes core responsibilities of verification, constraint enforcement, error correction, and fault recovery. This forms a secure "model decision-making, Runtime guarantee" architecture.
+
+Anthropic’s strategic goal is to build a fully trustworthy Runtime system for production Agents.
+
+### 7.3 Google: Runtime as Cloud Infrastructure
+
+Google’s Runtime design philosophy differs fundamentally from OpenAI and Anthropic. Rather than focusing on how a single Agent completes tasks, Google prioritizes the large-scale orchestration of thousands of concurrent Agents, approaching Runtime construction from a cloud infrastructure perspective.
+
+Its core research directions include long-duration task hosting, large-scale Agent scheduling, resource allocation, enterprise-level workflow support, and elastic scaling. Google aims to build a mass-capable Agent operating platform, defining its strategy as Runtime as Cloud Infrastructure.
+
+### 7.4 Microsoft: Building Composable Runtime
+
+Leveraging decades of software engineering accumulation, Microsoft’s Agent architecture aligns with mature enterprise software paradigms, focusing on modularity and collaboration. Microsoft views Agents as decomposable, combinable, and collaborative software components rather than isolated functional tools.
+
+Its technical layout, including the AutoGen multi-Agent framework and Copilot Studio, revolves around three core capabilities: multi-Agent collaboration, multi-tool intelligent orchestration, and end-to-end enterprise business workflow integration. Rather than building individual high-performance Agents, Microsoft focuses on systematic organization, scheduling, and management of massive Agent clusters to deeply integrate AI capabilities with existing enterprise software ecosystems. Microsoft’s Runtime strategy is defined as building a Composable Runtime.
+
+### 7.5 The Shifting Core Competency of AI Software Engineering
+
+Traditionally, a software team’s core competitiveness stems from superior architecture, high-quality code, and comprehensive testing. While these capabilities remain essential, they are no longer sufficient for AI product iteration.
+
+Modern teams must address new engineering challenges: how to sustain Agent operation for days, prevent unauthorized behaviors, verify task authenticity, recover from failures, and coordinate multi-Agent collaboration. These problems extend beyond the scope of traditional software engineering and belong exclusively to Runtime Engineering.
+
+Industry competition is shifting from "who has a better model" to "who has a more mature Runtime". As foundational model capabilities become increasingly homogeneous across the industry, Runtime engineering maturity has become the key differentiator for enterprise competitiveness.
+
+### Summary
+
+Reviewing software industry evolution, the technical stack has undergone continuous iteration. The earliest software architecture followed this structure:
+
+```Plain
+Application
+
+↓
+
+Operating System
+
+↓
+
+Hardware
+```
+
+The internet era added platform layers to the stack:
+
+```Plain
+Application
+
+↓
+
+Platform
+
+↓
+
+Operating System
+
+↓
+
+Infrastructure
+```
+
+The AI era has forged a brand-new software stack:
+
+```Plain
+Application
+
+↓
+
+Agent Runtime
+
+↓
+
+Foundation Model
+
+↓
+
+Infrastructure
+```
+
+The most transformative change is that foundation models have become part of basic infrastructure, while Runtime serves as the critical abstraction layer connecting business applications and AI models. Future software systems will no longer be built directly on operating systems, but on Agent Runtime.
+
+With the gradual homogenization of foundational model capabilities, Runtime will replicate the development trajectory of databases, operating systems, and cloud platforms, becoming the new underlying infrastructure and core competitive barrier of the AI software industry. AI industry competition has officially shifted from model capability iteration to Runtime engineering capability competition.
 
