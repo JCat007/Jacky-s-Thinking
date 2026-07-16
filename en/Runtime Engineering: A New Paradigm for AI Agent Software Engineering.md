@@ -292,3 +292,203 @@ Models determine AI intelligence, while Runtime determines whether such intellig
 In traditional software systems, Runtime is hidden beneath programming languages and operating systems, rarely attracting developer attention. In the AI Agent era, Runtime has moved from behind the scenes to the forefront. Since models lack inherent capabilities for state management, tool invocation, error recovery, and result verification, most engineering work for production-grade Agents occurs within the Runtime layer.
 
 Understanding Runtime explains why Prompt Engineering and Context Engineering are no longer sufficient to support complex Agent deployment, and why Harness Engineering has become a mainstream research focus in the industry.
+
+## Chapter 2 | Prompt, Context, Harness and Runtime: Evolution of Control Boundaries in AI Engineering
+
+Recent years have seen the emergence of numerous AI engineering concepts: Prompt Engineering, Context Engineering, Harness Engineering, Runtime Engineering, and Agent Engineering. These terms are frequently confused and misused, with a prevalent misconception that new paradigms replace old ones.
+
+In reality, the five paradigms form a hierarchical, inclusive system with continuously expanding engineering control boundaries, rather than an iterative replacement relationship. Production-grade Agent deployment relies on all of them indispensably. The essence of technical evolution lies in the continuous expansion of engineer-controllable system scopes and the refinement of engineering granularity.
+
+### 2.1 Prompt Engineering: Controlling Single Model Inference
+
+In the early LLM adoption stage, prompts were the only adjustable core variable for developers. The core proposition of Prompt Engineering is to accurately guide single model inference to generate expected outputs.
+
+Its core capabilities cover instruction design, role prompting, few-shot learning, chain-of-thought reasoning, output format constraints, and standardized example configuration, with an exclusive focus on optimizing the output quality of single model inference.
+
+This paradigm features an extremely limited control scope, as shown below:
+
+```plain
+User
+│
+Prompt
+│
+LLM
+│
+Output
+```
+
+It only covers the single-link workflow of "user input-prompt-model output", with no control over model-independent operation, execution, and exception handling. It only supports simple chatbot scenarios and cannot sustain complex Agent tasks.
+
+### 2.2 Context Engineering: Controlling Model Perceptual Scope
+
+As Agents evolved to support tool invocation, knowledge base access, and long-term multi-turn dialogue, the industry recognized that model inference quality depends not on prompt wording, but on the full spectrum of information accessible to models. Thus, Context Engineering emerged as a core engineering paradigm.
+
+Compared with Prompt Engineering, Context Engineering greatly expands the control boundary. It no longer focuses solely on prompt design, but comprehensively manages all model input information, including retrieval-augmented generation (RAG) knowledge bases, long-term memory, dialogue history, file context, tool descriptions, environmental status, context compression, and token budget control.
+
+Prompts are merely a subset of context. The optimized system architecture is as follows:
+
+```plain
+Knowledge
+Memory
+History
+Files
+Tools
+Environment
+     │
+     ▼
+ Context Builder
+     │
+     ▼
+     LLM
+```
+
+At this stage, engineers gain control over model input, beyond just prompt tuning. The core proposition evolves from "how should the model answer" to "what should the model know and perceive", fundamentally solving inference deviations caused by insufficient model information and limited perceptual scope, marking a major leap in AI engineering.
+
+### 2.3 Harness Engineering: Controlling Model Practical Execution
+
+However, pure input management becomes insufficient once Agents engage in formal operational tasks. Models require not only reasoning capabilities but also the ability to invoke tools, modify files, execute shell commands, browse web pages, operate databases, and coordinate multiple Agents.
+
+This introduces new practical challenges that Context Engineering cannot resolve, all occurring after model inference:
+
+```plain
+How to handle tool timeouts?
+How to resolve illegal JSON formats?
+How to address browser crashes?
+How to recover from failed API calls?
+How to deal with mid-task Agent exits?
+```
+
+Harness Engineering emerges to address these post-inference challenges. Its core proposition is to govern the practical execution of model intentions and ensure reliable translation of reasoning logic into real-world actions. Its core capabilities include tool Runtime scheduling, failure retry, breakpoint recovery, sandbox isolation, task scheduling, permission control, result verification, and full-link observability.
+
+The complete system workflow evolves to:
+
+```plain
+Context
+           │
+           ▼
+          LLM
+           │
+           ▼
+────────────────────────
+ Harness Runtime
+────────────────────────
+
+Tool Execution
+
+Retry
+
+Recovery
+
+Verification
+
+Sandbox
+
+Permission
+
+Telemetry
+```
+
+In short, Prompt Engineering governs single-round prompting logic, Context Engineering governs single-inference input information, and Harness Engineering governs the practical execution of model intentions.
+
+### 2.4 Runtime Engineering: Controlling the Full Agent Lifecycle
+
+Harness Engineering is only a component of the broader Runtime system. A complete Agent Runtime integrates additional core capabilities including task planning, global state management, workflow orchestration, event bus scheduling, resource allocation, effect evaluation, system governance, and continuous optimization.
+
+Full-scale Runtime Engineering covers the entire Agent lifecycle from initiation and execution to iteration and termination, answering the core question of "how to enable long-term, stable, adaptive, and sustainable Agent operation". Its control scope covers the complete intelligent operational loop:
+
+```plain
+Goal
+
+↓
+
+Observe
+
+↓
+
+Reason
+
+↓
+
+Act
+
+↓
+
+Verify
+
+↓
+
+Recover
+
+↓
+
+Learn
+
+↓
+
+Next Loop
+```
+
+In this system, the LLM is merely a reasoning node, with the Runtime governing the entire operational loop.
+
+### 2.5 Core Hierarchical Inclusion Relationship
+
+Many simplified diagrams present a linear iterative relationship:
+
+```plain
+Prompt
+   ↓
+Context
+   ↓
+Harness
+```
+
+This easily misleads readers into believing that old paradigms are obsolete and replaced by new ones. In fact, Prompts remain indispensable, Context still serves as a core Runtime capability, and Harness relies fundamentally on Prompt and Context systems.
+
+The essence of evolution is the continuous expansion of engineer-controllable system boundaries. The accurate nested hierarchical relationship is as follows:
+
+```plain
+┌────────────────────────────┐
+│ Runtime Engineering        │
+│                            │
+│ ┌──────────────────────┐   │
+│ │ Harness Engineering  │   │
+│ │                      │   │
+│ │ ┌────────────────┐   │   │
+│ │ │ Context Eng.   │   │   │
+│ │ │                │   │   │
+│ │ │ Prompt Eng.    │   │   │
+│ │ └────────────────┘   │   │
+│ └──────────────────────┘   │
+└────────────────────────────┘
+```
+
+Or in hierarchical tree form:
+
+```plain
+Runtime Engineering (Full lifecycle governance)
+└── Harness Engineering (Execution governance)
+　　└── Context Engineering (Inference input governance)
+　　　　└── Prompt Engineering (Single inference governance)
+```
+
+This system verifies that old engineering paradigms are never eliminated but integrated into upgraded unified engineering systems. The evolution of AI engineering is essentially the continuous expansion of controllable system boundaries.
+
+### 2.6 The Formation of a New Software Engineering Paradigm
+
+The core evolutionary logic of software engineering lies in the continuous upgrading of abstraction layers. Traditional software engineering abstracts fixed code logic, while AI engineering builds multi-layered innovative abstractions:
+
+(1) Prompt abstracts model reasoning capabilities;
+
+(2) Context abstracts model perceptual scope;
+
+(3) Harness abstracts model practical execution;
+
+(4) Runtime abstracts the full lifecycle of intelligent agents.
+
+The industry is undergoing a core transformation, shifting from "programming fixed logic" to "programming Runtime environments". In the future, developers’ core work will no longer focus on line-by-line business coding, but on designing Agent operating environments, governance rules, verification mechanisms, and lifecycle management strategies.
+
+### Summary
+
+The four core AI engineering paradigms form a nested capability system rather than an iterative replacement sequence. Prompts optimize model reasoning, Context optimizes model cognition, Harness optimizes task execution, and Runtime oversees overall system operation. The continuous expansion of engineering boundaries marks the official transition of AI software engineering from "single-point model optimization" to "full-scale system governance".
+
+
