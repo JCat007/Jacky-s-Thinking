@@ -491,4 +491,120 @@ The industry is undergoing a core transformation, shifting from "programming fix
 
 The four core AI engineering paradigms form a nested capability system rather than an iterative replacement sequence. Prompts optimize model reasoning, Context optimizes model cognition, Harness optimizes task execution, and Runtime oversees overall system operation. The continuous expansion of engineering boundaries marks the official transition of AI software engineering from "single-point model optimization" to "full-scale system governance".
 
+## Chapter 3 | Why AI Software Needs a New Runtime: Managing Probability for the First Time
+
+The century-long development of software engineering is essentially a history of governing escalating system complexity. From procedural and object-oriented programming to distributed systems and cloud computing, every architectural iteration addresses unresolved complexity bottlenecks of previous generations. The emergence of AI Agents pushes software engineering to a new inflection point.
+
+Traditionally, Runtime is regarded as low-level infrastructure. Java relies on JVM, JavaScript on Node.js and browsers, and Python on CPython for program execution. Traditional software engineering rarely discusses Runtime Engineering, as system complexity primarily stems from code: developers write code that defines program behavior, and Runtime merely executes predefined logic. Thus, traditional software engineering focuses exclusively on code quality.
+
+The integration of Agents into software systems subverts this premise. Modern software systems must now manage not only fixed code logic but also probabilistic uncertainty.
+
+### 3.1 From Deterministic to Probabilistic Programs
+
+For decades, software development has been built on a fundamental assumption: programs are deterministic. Identical inputs always produce identical outputs. For example:
+
+```plain
+price = get_price()
+
+if price > 100:
+    buy()
+else:
+    wait()
+```
+
+This logic contains no ambiguity, with fully developer-defined control flows. Program correctness depends entirely on code correctness.
+
+AI Agents break this deterministic paradigm, introducing an entirely new control flow structure:
+
+```plain
+Goal
+
+↓
+
+LLM
+
+↓
+
+Action ?
+```
+
+Subsequent behaviors are determined by model reasoning rather than hard-coded logic. The model may initiate searches, launch browsers, edit files, write code, replan tasks, or terminate workflows. These behaviors are non-deterministic: the same goal may yield completely different results across multiple runs.
+
+For the first time in software history, probabilistic control flows have become a core component of software systems.
+
+### 3.2 Limitations of Prompt Engineering in Managing Probability
+
+Many beginners assume that highly detailed prompts can eliminate model uncertainty. This is the fundamental limitation of Prompt Engineering.
+
+Prompts can influence model behavior but cannot enforce absolute compliance. They can increase the probability of compliant outputs but cannot guarantee them absolutely. For instance:
+
+Even with explicit "JSON-only output" prompts, models may still generate Markdown content;
+
+Even with "no dangerous tool calls" instructions, models may still trigger risky operations;
+
+Even with "verify file existence first" prompts, models may still overwrite files directly.
+
+The core reason is that prompts are merely soft constraints. They cannot eliminate format errors, instruction omissions, unauthorized calls, or hallucinations, failing to guarantee system-level reliability.
+
+### 3.3 Limitations of Context Engineering in Managing Probability
+
+Context Engineering solves the problem of insufficient model information by integrating memory, knowledge bases, dialogue history, and environmental data to improve reasoning quality. However, it does not change the inherent probabilistic nature of models.
+
+Take coding Agents as an example. Even with complete project structures, source code, test files, modification history, and Git status provided via Context, models may still mistakenly delete files, overwrite valid modifications, omit tests, enter infinite loops, or repeat tool calls.
+
+Context optimization improves inference quality but cannot eliminate model errors. In short, Prompt and Context Engineering can only reduce error probabilities, not eliminate them, making them insufficient for production-grade stability requirements.
+
+### 3.4 Core Value of Runtime: Establishing Determinism for Probabilistic Systems
+
+The core challenge is not that models make mistakes, but that systems must be designed to tolerate and recover from mistakes. This is the essential difference between Runtime Engineering and traditional AI Engineering.
+
+Traditional AI research focuses on improving model accuracy. Runtime Engineering focuses on post-failure system resilience. A classic software engineering principle applies: ​*systems are designed for failure, not for success*​.
+
+This principle governs internet systems, databases, distributed systems, and equally applies to Agents.
+
+The key question is not "will models make mistakes" (the answer is inevitably yes), but "can the system continue operating after model errors". Runtime addresses unresolved challenges of Prompt and Context Engineering, including invalid JSON, API timeouts, browser crashes, empty tool outputs, and reasoning errors.
+
+The core logic of Runtime Engineering is failure-oriented design. It assumes inherent model errors, tool anomalies, and system failures, with the core goal of preventing system collapse and enabling continuous operation rather than avoiding errors.
+
+All Runtime capabilities serve a unified goal: governing model probability and encapsulating non-deterministic intelligent reasoning into deterministic system behaviors. Retry mechanisms mitigate random failures, verification blocks hallucinatory outputs, breakpoint mechanisms ensure task resumption, and governance strategies prevent unauthorized operations, fully offsetting model uncertainty.
+
+### 3.5 Runtime Engineering as an Emerging Software Engineering Discipline
+
+Throughout history, software engineering has evolved to manage escalating complexity: procedural programming managed function logic, object-oriented programming managed object encapsulation, internet-era engineering managed network interactions, and cloud computing managed distributed resource scheduling.
+
+AI Agents introduce an entirely new type of complexity: probabilistic uncertainty. Runtime Engineering is not a marginal AI technique, but a natural evolutionary branch of software engineering dedicated to stabilizing probabilistic computing systems. This explains why mainstream Agent frameworks prioritize Runtime optimization over prompt tuning.
+
+### 3.6 The New Layered Architecture of AI Software
+
+Traditional software adopts a three-layer architecture:
+
+```plain
+Application Layer
+────────────
+Business Logic Layer
+────────────
+Infrastructure Layer
+```
+
+Modern AI software evolves into a four-layer structure:
+
+```plain
+Application Layer
+────────────
+Agent Layer
+────────────
+Runtime Layer
+────────────
+Foundation Model Layer
+```
+
+The critical difference is that Agent layers can no longer directly run on foundation models. The newly added Runtime layer absorbs all model-induced uncertainty.
+
+Mature AI software will regard Runtime as core infrastructure rather than a simple tool library. Just as operating systems decouple software from direct hardware operations, Runtime decouples Agents from direct probabilistic model interactions.
+
+### Summary
+
+Traditional software engineering manages deterministic code logic, while modern software engineering manages probabilistic intelligence. Production-grade Agent development can no longer rely solely on Prompt and Context Engineering. The core challenge shifts from reducing model errors to ensuring stable, secure, and continuous system operation despite inevitable model errors. This is the fundamental value of Runtime Engineering.
+
+Among Runtime practices, Harness Engineering has emerged as an industry-consensus implementation system, organizing Runtime capabilities, constraining model behaviors, coordinating tool interactions, recovering from failures, and unifying scattered operational capabilities into an integrated system.
 
