@@ -1094,3 +1094,78 @@ The most transformative change is that foundation models have become part of bas
 
 With the gradual homogenization of foundational model capabilities, Runtime will replicate the development trajectory of databases, operating systems, and cloud platforms, becoming the new underlying infrastructure and core competitive barrier of the AI software industry. AI industry competition has officially shifted from model capability iteration to Runtime engineering capability competition.
 
+## Chapter 8 | The Future of Runtime: The Next Decade of AI Software Engineering
+
+A distinct pattern emerges from decades of software evolution: every shift in computing paradigms redefines the core abstraction of software engineering. Mainframe-era software centered on programs; internet-era software centered on services; cloud-era software centered on platforms. The emergence of AI Agents is driving software engineering into a new paradigm.
+
+Future software will no longer merely execute pre-written static logic. It will independently plan tasks, run continuously, actively invoke tools, and interact dynamically with the real world. For the first time, software possesses autonomous "behavior", and governing this behavioral intelligence will become the core challenge of next-generation software engineering.
+
+### 8.1 Capability Boundary Iteration: Models Are Continuously Absorbing Runtime Capabilities
+
+A prevalent industry question persists: will Runtime gradually disappear as foundation models grow more powerful? The answer is both yes and no.
+
+It is undeniable that increasingly advanced model capabilities are replacing traditional Runtime functions:
+
+​**1. Task Planning**​: Early Agents relied on external workflows and dedicated planners for task decomposition. Modern LLMs can generate complex multi-step execution plans in a single inference pass.
+
+​**2. Tool Understanding**​: Developers previously needed meticulously designed tool prompts. Current models can automatically understand tool schemas and select appropriate invocation logic.
+
+​**3. Short-term Memory**​: Expanding context windows allow most session state data to be stored directly in model context, replacing partial Runtime state management functions.
+
+Additionally, code generation, function calling, and basic reflection capabilities are becoming native model features. The boundary between models and Runtime is continuously shifting, with models absorbing more lightweight intelligent capabilities. It's an irreversible industry trend.
+
+### 8.2 Irreplaceable Core Capabilities of Runtime
+
+Nevertheless, a set of core Runtime capabilities can never be fully replaced by models, as they belong to system engineering rather than intelligent reasoning:
+
+​**1. State Management**​: Models can interpret state information, but persistent state data (databases, file systems, browser status, task progress, permissions, execution history) must be managed and stored by Runtime.
+
+​**2. Verification**​: A model can judge code "logical rationality" through reasoning, but it cannot confirm practical execution results. Whether it is successful compilation, valid web submission, completed payment, or effective robotic operation, they all require real-world verification.
+
+​**3. Recovery**​: Fault recovery is a systematic mechanism rather than an intelligent capability. Checkpointing, rollback, replay, and retry mechanisms originate from distributed systems and workflow engines, not LLMs.
+
+​**4. Governance**​: Permissions, security auditing, resource budgeting, and compliance policies are enterprise system management rules defined and enforced exclusively by Runtime. Models can only follow preset rules, not formulate or enforce them.
+
+​**5. Observability**​: Logs, metrics, cost analysis, and full-link tracing serve developers, operators, and enterprises, constituting inherent Runtime capabilities.
+
+In summary, models are increasingly specialized in thinking, while Runtime permanently undertakes running responsibilities. The two are not competitive but complementary, with their functional boundaries dynamically evolving.
+
+### 8.3 Runtime Will Become Universal Core Infrastructure
+
+The universality of Runtime capabilities determines its inevitable infrastructure evolution. All AI Agents require standardized capabilities including state management, tool execution, permission control, task scheduling, fault recovery, result verification, and operational monitoring.
+
+No modern technology team independently develops underlying infrastructures such as TCP/IP protocol stacks or database kernels. Similarly, future teams will no longer repeatedly build customized Agent Runtime systems. Runtime will gradually precipitate into universal basic infrastructure, with enterprise competition focusing on Runtime maturity, reliability, and ecosystem completeness, rather than just model performance.
+
+### 8.4 Will Agent Operating Systems Emerge?
+
+In recent years, the concept of the Agent Operating System has sparked widespread discussion.
+
+The term itself is compelling. However, if we define an operating system as system software tasked with resource management, execution scheduling, access control, and lifecycle maintenance, many modern Runtimes already possess substantial OS-like capabilities. Rather than managing conventional processes, these Runtimes oversee Agents, yet their core responsibilities remain highly analogous.
+
+In the foreseeable future, Runtime will likely evolve further to support the following capabilities: enabling multiple Agents to run concurrently within a single Runtime; allowing cross-Agent sharing of memory and tools; centrally scheduling computational resources; uniformly governing access permissions and security policies; and consolidating Runtime logs and state records. At that stage, the dividing line between Runtime and traditional operating system will grow increasingly blurred.
+
+Even so, I think the term Agent Runtime is more accurate than Agent OS. Traditional operating systems focus on underlying hardware resource management, while Runtime centers on the full lifecycle operational governance of intelligent Agents. Agent OS is merely a potential implementation form of Runtime, not its essential definition.
+
+### 8.5 Runtime Engineering: The New Paradigm of Software Engineering
+
+The essence of Runtime Engineering’s industrial value lies in redefining AI-era software engineering:
+
+Prompt Engineering optimizes how models answer questions;
+
+Context Engineering optimizes how models perceive information;
+
+Harness Engineering optimizes how models execute stably.
+
+Runtime Engineering solves the ultimate problem: how to build long-term stable, reliable, and controllable AI software systems. It establishes deterministic engineering order for software systems driven by probabilistic models.
+
+Runtime Engineering is not a niche AI engineering concept, but a natural evolution of traditional software engineering for the AI era.
+
+### Conclusion
+
+Every iteration of software engineering serves to tame growing system complexity. Programming languages tame computational complexity; distributed systems tame network complexity; cloud platforms tame resource scheduling complexity; and Runtime Engineering tames the operational complexity of intelligent systems.
+
+Runtime Engineering is neither an upgrade of Prompt Engineering nor a rebranding of development frameworks. It represents a brand-new software engineering ideology: treating artificial intelligence as a running object that requires continuous governance, verification, constraint, and iteration.
+
+Future software engineers will still write code, but their core work will be fundamentally upgraded: from defining what programs do to defining how intelligence operates.
+
+Models endow AI with intelligence, while Runtime endows AI with industrial-grade software reliability. This is the definitive future of AI software engineering.
