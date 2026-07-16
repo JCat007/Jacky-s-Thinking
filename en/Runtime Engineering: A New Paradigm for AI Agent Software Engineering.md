@@ -1136,7 +1136,7 @@ The universality of Runtime capabilities determines its inevitable infrastructur
 
 No modern technology team independently develops underlying infrastructures such as TCP/IP protocol stacks or database kernels. Similarly, future teams will no longer repeatedly build customized Agent Runtime systems. Runtime will gradually precipitate into universal basic infrastructure, with enterprise competition focusing on Runtime maturity, reliability, and ecosystem completeness, rather than just model performance.
 
-### 8.4 Will Agent Operating Systems Emerge?
+### 8.4 Will Agent Operating Systems Emerge
 
 In recent years, the concept of the Agent Operating System has sparked widespread discussion.
 
