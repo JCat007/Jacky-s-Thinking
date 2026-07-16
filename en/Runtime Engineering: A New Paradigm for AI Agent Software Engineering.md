@@ -180,7 +180,7 @@ How to ensure system security?
 How to observe and troubleshoot the entire system?
 ```
 
-This paper adopts the following hierarchical logical relationship:
+This article adopts the following hierarchical logical relationship:
 
 ```plain
 Software Engineering
