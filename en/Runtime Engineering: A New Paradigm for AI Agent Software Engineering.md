@@ -608,3 +608,137 @@ Traditional software engineering manages deterministic code logic, while modern 
 
 Among Runtime practices, Harness Engineering has emerged as an industry-consensus implementation system, organizing Runtime capabilities, constraining model behaviors, coordinating tool interactions, recovering from failures, and unifying scattered operational capabilities into an integrated system.
 
+## Chapter 4 | Harness Engineering: Practical Implementation of Runtime
+
+### 4.1 Core Definition of Harness Engineering
+
+The core positioning of these three paradigms can be summarized as follows:
+
+Prompt Engineering answers: *How to enable better model reasoning?*
+
+Context Engineering answers: *How to equip models with accurate information?*
+
+Runtime Engineering answers: *How to sustain Agent operation?*
+
+This raises a critical follow-up question:How should Runtime systems be constructed? Specifically, how can stateless, non-deterministic LLMs be transformed into task-capable Agents for real-world scenarios? This is the core problem solved by Harness Engineering.
+
+This article defines Harness Engineering as an engineering methodology for implementing Runtime theories in production environments. It builds foundational capabilities including state management, execution control, tool operation, failure verification and recovery, security governance, and full-link observability, enabling probabilistic models to operate within deterministic engineering systems.
+
+Two key definitions clarify its essence: First, Harness operates independently of models, serving as external operational infrastructure. Second, Harness is not a framework, SDK, or specific product, but a systematic engineering philosophy. Mainstream products including Claude Code, OpenAI Responses API, Google Agent Engine, and enterprise internal Agent platforms all essentially implement Runtime management capabilities via Harness Engineering.
+
+### 4.2 Core Goal of Harness: Translating Reasoning into Execution
+
+LLMs excel at reasoning, while real-world business scenarios demand actionable execution. A fundamental gap exists between model reasoning and practical operation:
+
+Models can reason about required code modifications but cannot execute Git operations;
+
+Models can deduce database invocation requirements but cannot establish actual database connections;
+
+Models can plan browser operations but cannot control real browser behaviors;
+
+Models can judge the need for retries but cannot define retry termination conditions.
+
+The primary responsibility of Harness is to bridge this gap: translating model reasoning intentions into executable real-world actions, converting model intelligence into tangible business value.
+
+### 4.3 Operational Essence of Production-Grade Agent Runtime
+
+Most people narrowly equate Runtime with tool calling, which only constitutes a tiny fraction of Runtime capabilities. A complete Agent operational loop consists of the following steps:
+
+```plain
+Goal
+ │
+ ▼
+Observe
+ │
+ ▼
+Context Assembly
+ │
+ ▼
+Reason (Exclusive LLM phase)
+ │
+ ▼
+Plan
+ │
+ ▼
+Tool Execution
+ │
+ ▼
+Verification
+ │
+ ▼
+State Update
+ │
+ ▼
+Memory Update
+ │
+ ▼
+Recovery
+ │
+ ▼
+Next Loop
+```
+
+Only the reasoning phase relies on LLM inference. All other steps are fully managed by Runtime. In production environments, Agents spend most of their time waiting, executing, recovering, verifying, saving states, and scheduling tasks, rather than invoking models. This explains enterprise statistical findings: model inference accounts for only a small portion of the Agent lifecycle, with most engineering complexity stemming from model-independent Runtime operations.
+
+### 4.4 Six Core Operational Responsibilities of Harness
+
+Regardless of framework differences, all production-grade Agents rely on six universal core capabilities that form the backbone of Harness Runtime. These capabilities are defined by operational responsibilities rather than technical modules, ensuring long-term theoretical universality amid framework iterations:
+
+```plain
+Harness Runtime
+
+        ┌──────────────────────────────┐
+
+            State Management
+            Execution Management
+            Governance & Security
+            Result Verification
+            Full-Link Observation
+            Dynamic Optimization
+
+        └──────────────────────────────┘
+```
+
+#### 1. State Management
+
+LLMs are inherently stateless inference engines, with each inference being an independent probabilistic calculation incapable of sustaining task progress, environmental status, or historical information. All core states, including task phases, workflow progress, long-term memory, checkpoints, session information, environment variables, and execution artifacts, must be centrally hosted by Runtime.
+
+State management is the foundation of breakpoint resumption, task replay, exception recovery, and long-cycle Agent operation, serving as the core cornerstone of the entire Runtime system.
+
+#### 2. Execution Management
+
+Execution management translates model intentions into real-world actions, covering file operations, browser scheduling, shell command execution, database reading/writing, API invocation, and sub-agent collaboration. It answers the core question: *how do models interact with and affect the real world?*
+
+A critical rule governs execution: LLMs never directly operate on external systems. All model intentions undergo Runtime preprocessing including parameter verification, permission checking, timeout control, failure retry, and log tracking before execution. Harness acts as a boundary layer between Agents and the external world, isolating model uncertainty and ensuring controllable execution.
+
+#### 3. Governance & Security
+
+Traditional software governance targets end users; Agent governance targets model behaviors. Governance rules define permissible tool invocations, editable file scopes, accessible API permissions, manual approval requirements for high-risk operations, and prompt injection attack defense mechanisms.
+
+As Agents gain high-risk capabilities including browser control, database operation, server management, and payment invocation, Runtime delivers comprehensive governance via tool permission control, file operation whitelists, high-risk operation interception, manual approval workflows, operation auditing, resource quota limiting, and security isolation. Governance aims to control risks rather than restrict intelligence, enabling models to operate autonomously within secure boundaries.
+
+#### 4. Result Verification
+
+Result verification is increasingly recognized as the most critical Runtime capability. Relying on model self-judgment of task completion poses significant operational risks. The core principle of verification is ​*Never Trust the Model*​.
+
+When a model outputs a "task completed" judgment, the Runtime independently verifies factual results, including Git submission status, file existence, SQL execution effectiveness, browser operation completion, and unit test pass rates. Independent environmental and hardware-level verification fundamentally eliminates model hallucinations, serving as the foundational guarantee for production-grade Agent deployment, surpassing the limitations of model self-reflection.
+
+#### 5. Full-Link Observation
+
+Agent observability inherits traditional software logging, link tracing, and indicator monitoring systems, while expanding coverage to record prompt content, context assembly processes, model decision logic, tool call records, memory read/write operations, resource consumption, latency metrics, and cost data.
+
+Observability answers the core question: *why does the Agent take specific actions?* A complete observability system enables Runtime to implement task replay, fault debugging, performance optimization and behavior tracing, forming the essential foundation for Agent operability and iteration.
+
+#### 6. Dynamic Optimization
+
+On the basis of ensuring operational correctness, dynamic optimization continuously improves Runtime efficiency via task scheduling optimization, cache strategy tuning, token budget management, parallel task processing, queue scheduling, load balancing, cost control, and adaptive planning. It focuses on improving operational efficiency and cost-effectiveness while maintaining system accuracy, supporting stable, efficient, and low-cost long-term Agent operation.
+
+### Summary
+
+As model capabilities iterate and improve, built-in model functions will gradually replace basic capabilities including planning, memory management, and simple tool calling. However, core engineering capabilities including state management, result verification, security governance, full-link observability, and exception recovery can never be replaced by model intelligence.
+
+Harness Engineering is accurately defined as a standardized engineering system for full lifecycle model management, behavioral constraint, result verification, and risk governance, rather than a simplistic "all-inclusive non-model capability set".
+
+While Prompt Engineering empowers model thinking and Context Engineering empowers model cognition, Harness Engineering empowers reliable real-world model operation. It is not a prompt skill or Agent framework, but a complete Runtime-centric software engineering methodology that ensures stability, recoverability, verifiability, and governability for probabilistic intelligent systems in long-cycle, multi-step, multi-tool, and multi-collaborator scenarios.
+
+
