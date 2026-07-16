@@ -863,3 +863,114 @@ If the previous chapter elaborated on the constituent capabilities of Runtime, t
 
 As a result, Runtime Engineering has evolved from a simple tool wrapper for AI applications to a discipline aligned with distributed systems, operating systems, and cloud platform architecture.
 
+## Chapter 6 | Seven Design Principles of Runtime Engineering
+
+While Harness defines the specific engineering implementation of Runtime, design principles shape Runtime's underlying engineering philosophy.
+
+Throughout the history of software engineering, every major technological iteration has been driven by a new set of universal design principles. These principles transcend framework specifics, programming languages, and product forms, serving as universal methodological guidelines. The same applies to Runtime Engineering. Teams may adopt different Agent frameworks, LLMs, and deployment architectures, but all long-term stable production-grade Agent Runtimes adhere to a unified set of core principles.
+
+This chapter summarizes these rules into seven foundational design principles.
+
+### Principle 1: Never Trust the Model
+
+This is the first principle of Runtime Engineering.
+
+Traditional software development operates on deterministic logic: correct code guarantees correct program execution. However, LLMs are probabilistic models by nature. Identical inputs can produce different outputs, and model errors are unpredictable and irregular.
+
+Thus, Runtime systems must operate on a default assumption: models are prone to errors at any time.
+
+This principle does not negate model capabilities but recognizes the inherent characteristics of probabilistic systems. All critical operations must rely on objective verification rather than blind trust in model outputs, as illustrated below:
+
+```Plain
+A model's claim of "passed tests" requires independent test re-execution
+A model's claim of "completed file modification" requires file system verification
+A model's claim of "sent email" requires API return value confirmation
+```
+
+The principle of "Never trust the model" constitutes the fundamental dividing line between production-grade Runtime systems and traditional AI applications.
+
+### Principle 2: State Lives Outside the LLM
+
+A common mistake among novice developers is relying on LLMs to maintain contextual state.
+
+This approach inevitably leads to system instability in production environments, as LLMs cannot consistently maintain complex long-term states. All reliable state data, including task phases, completed steps, tool call history, execution artifacts, checkpoints, long-term memory, and environmental status, must be fully managed by the Runtime.
+
+The LLM acts purely as a stateless inference engine, accessing state snapshots on demand without participating in state maintenance or iteration. This mechanism completely eliminates common issues such as model memory loss, state disorder, and task discontinuity, ensuring consistent Agent operation.
+
+### Principle 3: Everything Must Be Observable
+
+Traditional software debugging relies on complete logs for fault tracing. An Agent that cannot explain its decision-making logic (why a tool was invoked, a file was deleted, code was modified, or a task terminated early) is unfit for production deployment.
+
+A mature Runtime records full-link operational data, including prompts, contextual information, memory injection records, model decisions, planner outputs, tool call results, verification status, token consumption, latency, and operational costs. Observability covers not only system behaviors but also the entire decision-making process of Agents.
+
+Future Runtime systems will function like flight recorders, enabling complete replay of every Agent’s thinking and execution process.
+
+### Principle 4: Everything Must Be Recoverable
+
+Failures in models, tools, networks, and backend services are inevitable in production. Runtime systems must be failure-oriented in design, with all key execution steps supporting Retry, Resume, Rollback, Checkpoint resumption, and Task Replay.
+
+For example, a coding Agent interrupted after modifying 50 files should resume from the latest checkpoint instead of restarting from scratch; a research Agent that completes 100 web searches should not discard all progress due to a final-step failure. Recovery capabilities fundamentally determine an Agent’s ability to execute long-duration, complex tasks stably.
+
+### Principle 5: Everything Important Must Be Verifiable
+
+This principle complements and reinforces the "Never trust the model" tenet.
+
+Models can generate hypothetical conclusions, but Runtime systems must validate objective facts. All core operations affecting business outcomes require objective verification based on real environmental feedback, business rules, hardware responses, and standardized test cases. This eliminates false task closure and ensures authentic, valid execution results.
+
+When a model claims task completion, the Runtime must verify practical outcomes:
+
+```Plain
+Whether code compilation succeeds
+Whether all unit tests pass
+Whether web submissions are successfully completed
+Whether data is truly written to the database
+Whether file content matches expectations
+Whether APIs return successful status codes
+```
+
+Verification will evolve into an independent, dedicated layer in future Runtime architectures, driving the widespread adoption of Verifier, Judge, and Critic components in Agent systems.
+
+### Principle 6: Security Is a Runtime Capability
+
+Many early Agent systems adopt post-hoc security filtering, which suffices for demo environments but fails to meet production security requirements. Production-grade Runtime systems embed security into every stage of the operational lifecycle:
+
+```Plain
+Restrict tool exposure scope before model intent generation
+Verify access permissions before tool execution
+Limit resource consumption during operation
+Audit execution results after task completion
+```
+
+Security should not be a plug-in accessory but a native Runtime capability throughout the entire workflow. This drives the industry-wide emphasis on Policy Engines, sandbox isolation, least privilege access, human approval mechanisms, and audit logging in modern Runtime design. These native security features fundamentally mitigate risks of unauthorized model operations, malicious calls, and data leaks.
+
+### Principle 7: The Runtime Owns the Lifecycle
+
+LLMs are only responsible for single-step inference and reasoning. The entire Agent lifecycle including startup, operation, suspension, resumption, termination, and iteration is fully controlled and managed by the Runtime. The Runtime defines Agent operation rhythms, execution boundaries, and fault tolerance strategies, serving as the core controller of AI system operations.
+
+### Summary
+
+The seven core design principles interact and form a complete closed-loop engineering philosophy for Runtime Engineering:
+
+```Plain
+Runtime Principles
+
+            Never Trust the Model
+                     │
+      ┌──────────────┼──────────────┐
+      ▼              ▼              ▼
+ State Outside  Everything     Security by 
+     LLM        Observable       Default
+      │              │
+      ▼              ▼
+Everything       Everything
+Recoverable      Verifiable
+       \            /
+        \          /
+         └────────┘
+              ▼
+      Runtime Owns the Lifecycle
+```
+
+The core value of Runtime lies not in eliminating model errors, but in imposing standardized engineering constraints to bring predictable, controllable, fault-tolerant, and iterative deterministic order to probabilistic intelligent systems.
+
+
