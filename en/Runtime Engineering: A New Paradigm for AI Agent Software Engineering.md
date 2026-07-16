@@ -741,4 +741,125 @@ Harness Engineering is accurately defined as a standardized engineering system f
 
 While Prompt Engineering empowers model thinking and Context Engineering empowers model cognition, Harness Engineering empowers reliable real-world model operation. It is not a prompt skill or Agent framework, but a complete Runtime-centric software engineering methodology that ensures stability, recoverability, verifiability, and governability for probabilistic intelligent systems in long-cycle, multi-step, multi-tool, and multi-collaborator scenarios.
 
+## Chapter 5 | How Runtime Manages Probability: Four Core Operating Mechanisms of Production-Grade Agents
+
+The previous chapters clarified the value of Runtime and the implementation logic of Harness. This chapter focuses on a core engineering problem: how Runtime transforms probabilistic model inference into deterministic system operation, enabling Agents to achieve a qualitative leap from demo prototypes to production-grade deployment.
+
+The key lies not in frameworks or models, but in a set of standardized, universal operating mechanisms. Runtime Engineering must acknowledge an undeniable reality: large language models are inherently error-prone. Its core goal is therefore not to eliminate model errors entirely, but to ensure continuous and stable system operation even when errors occur. To this end, all mature Agent Runtime systems rely on four foundational mechanisms:
+
+1. State
+2. Execution
+3. Governance
+4. Verification & Recovery
+
+Together, these mechanisms form the core operational capabilities of production-grade Agents.
+
+### 5.1 State
+
+To understand state management, we start with a common phenomenon: why does ChatGPT lose all contextual memory after a page refresh?
+
+The root cause is the inherent stateless nature of LLMs. Each inference run is an independent forward pass. The model retains no memory of previously invoked tools, Shell execution progress, opened browser tabs, or database modifications.
+
+Only the Runtime can persist such contextual information. Hence, the primary principle of production-grade Agents is State Outside LLM. All state data, including task status, environmental context, memory states, and execution artifacts, is fully managed and stored by the Runtime. These records accurately reflect the real-time execution status of an Agent. The LLM only reads state snapshots for inference and maintains no persistent state on its own.
+
+This explains why modern Runtime systems widely adopt classic distributed system design paradigms such as Event Sourcing, State Store, and Checkpointing. As Agents evolve into long-running distributed processes, they require the same robust state management capabilities as traditional distributed systems.
+
+### 5.2 Execution
+
+Agents deliver practical business value through execution, yet execution is also the highest-risk link in the entire workflow.
+
+A model may generate an intent to "delete an entire directory", but the actual execution must never be handled by the model itself. This responsibility belongs exclusively to the Runtime. Execution Control is not merely about running commands, but about governing and standardizing the entire execution process. Mature Runtime systems deploy a complete control layer between LLMs and tool execution, following the workflow below:
+
+```Plain
+LLM
+        ↓
+Task Intent
+        ↓
+Runtime
+        ↓
+Permission Verification
+        ↓
+Tool Adapter
+        ↓
+Retry Mechanism
+        ↓
+Timeout Control
+        ↓
+Tool Execution
+        ↓
+Execution Result
+```
+
+This layered architecture ensures that LLMs only generate operational intents and are isolated from direct interaction with the real-world environment. The Runtime builds a closed-loop control pipeline: model intent generation → permission verification → tool adaptation → timeout governance → failure retry → result return.
+
+This mechanism upgrades simple Tool Calling to comprehensive Tool Governance. It effectively prevents unauthorized operations, misoperations, and invalid actions by models, making the entire execution process controllable, traceable, and fault-tolerant.
+
+### 5.3 Governance
+
+Governance has become one of the most widely discussed Runtime topics in the industry over the past year. As modern Agents gain the ability to operate browsers, manage emails, modify databases, and process payments, they can directly impact real-world business scenarios. Traditional software permission models are no longer sufficient to secure AI Agent operations.
+
+Future Runtime systems will function similarly to operating systems, where all Agent capabilities and behaviors are constrained and standardized by unified system policies.
+
+The core tenet of Governance can be summarized as: Never trust the model, only trust system rules.
+
+### 5.4 Verification & Recovery
+
+Verification and Recovery represent the most critical evolutionary component of next-generation Runtime systems.
+
+Early Agent systems relied heavily on model self-reflection, where LLMs self-audited and validated their own outputs. However, this approach has inherent limitations: self-validation by a probabilistic model still yields probabilistic results, rather than deterministic facts. To address this flaw, modern Runtime systems introduce an independent Verifier layer for objective validation, with typical scenarios as follows:
+
+```Plain
+Automatically run tests after code generation
+Automatically capture screenshots after web form submission
+Automatically execute query checks after database modifications
+Automatically perform OCR after browser operations
+Automatically run diff checks after Git commits
+```
+
+Runtime systems no longer trust model claims of "task completion" and instead verify results objectively through real-world feedback. Objective Verification is gradually replacing subjective model Reflection, marking a pivotal transformation in Runtime architecture.
+
+Even with rigorous verification, execution failures remain inevitable. This necessitates a comprehensive recovery mechanism, covering retry/resume, rollback, checkpoint-based resumption, task replay, human approval fallback, fallback model strategies, plan repair, sub-task retry, and Agent restart. These capabilities cover all failure scenarios, enabling Agents to handle anomalies and maintain uninterrupted operation.
+
+Notably, all these mechanisms are inherited from traditional distributed systems. For the first time, Agent Runtime systems extensively borrow design philosophies from databases, Kubernetes, workflow engines, and message queues. This convergence is logical: these mature distributed systems have spent decades solving stability and failure recovery problems that modern Agents now face.
+
+### 5.5 Closed-Loop Operation of the Four Core Mechanisms
+
+Integrating the above mechanisms, the core closed-loop workflow of a production-grade Runtime is structured as follows:
+
+```Plain
+Goal Definition
+                  │
+                  ▼
+            Planner (LLM Planning & Decision-Making)
+                  │
+                  ▼
+         Execution Controller (Runtime Governance)
+                  │
+                  ▼
+          Tool / Environment Execution
+                  │
+                  ▼
+             Verifier (Objective Result Validation)
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+      Success            Failure
+        │                   │
+        ▼                   ▼
+   State Update        Recovery Engine
+        │                   │
+        └─────────┬─────────┘
+                  ▼
+            Next Iteration (Continuous Operation)
+```
+
+Within this complete closed-loop system, LLMs are solely responsible for planning and reasoning. All capabilities related to system stability, reliability, security, and resilience are fully guaranteed by the four core Runtime mechanisms.
+
+### Summary
+
+Prompts define how models think, while Runtime defines when models think, act, pause, and correct errors.
+
+If the previous chapter elaborated on the constituent capabilities of Runtime, this chapter answers why Runtime enables Agents to scale from demo prototypes to production environments. The core breakthrough lies not in adding more tools, but in building a standardized operating system centered on state management, execution control, governance, and verification & recovery. This engineering framework encapsulates the inherent randomness of probabilistic models within a manageable, recoverable, and verifiable system.
+
+As a result, Runtime Engineering has evolved from a simple tool wrapper for AI applications to a discipline aligned with distributed systems, operating systems, and cloud platform architecture.
 
