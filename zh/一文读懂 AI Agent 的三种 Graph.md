@@ -1,8 +1,6 @@
 如果你最近关注 AI Agent，一定会发现一个现象：越来越多的人开始讨论 Graph（图结构）。
 
-LangGraph、Google ADK、CrewAI Flow 等框架，都在强调 Graph；OpenAI、Anthropic 等公司也开始越来越多地讨论 Agent 的 Graph 架构和复杂协作（Complex Orchestration）。Peter Steinberger 在 X 上的一句反问，再次掀起 Graph 的讨论热潮。Graph 再次成为 Agent 领域的热议关键词。
-
-（Peter 的反问截图）
+LangGraph、Google ADK、CrewAI Flow 等框架，都在强调 Graph；OpenAI、Anthropic 等公司也开始越来越多地讨论 Agent 的 Graph 架构和复杂协作（Complex Orchestration）。Peter Steinberger 在 X 上的一句反问（“Are we still talking loops or did we shift to graphs yet（我们还在讨论 Loop，还是已经转到 Graph 的话题了）?”），再次掀起 Graph 的讨论热潮。Graph 再次成为 Agent 领域的热议关键词。
 
 但问题也随之而来：很多人第一次接触 Graph，是因为 LangGraph，因此很容易认为 “Graph = Workflow = DAG”。还有一些文章则把 Graph 描述为多个 Agent 之间的协作网络（Multi-Agent Graph），又或者说，Graph 是由多个 Feedback Loop 构成的网络（Network of Feedback Loops）。于是，一个简单的词，开始代表三种完全不同的含义。这也是目前 AI Agent 领域最容易产生概念混淆的地方。
 
