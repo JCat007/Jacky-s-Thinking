@@ -26,7 +26,7 @@ LangGraph、Google ADK、CrewAI Flow 等框架，都在强调 Graph；OpenAI、A
 
 接下来，我们从最基础的问题出发，逐层拆解 AI Agent 的 Graph 体系。
 
-# 一、Graph，到底是什么
+## 一、Graph，到底是什么
 
 提到 AI Agent 中的 Graph，很多人的第一联想都是 LangGraph。
 
@@ -70,7 +70,7 @@ AI Agent Graph
 它们分别回答三个完全不同的问题：
 
 ```markdown
-# AI Agent Graph 三大类型对比
+## AI Agent Graph 三大类型对比
 | Graph 类型 | 核心节点 Node | 核心解决问题 |
 | :--- | :--- | :--- |
 | Task Graph | 任务、函数、工作流单元 | 规范复杂任务的拆分、执行与流转流程 |
@@ -90,7 +90,7 @@ AI Agent Graph
 
 也就是说，它们关注的是同一个系统的三个不同层面：执行、协作与演进。这也是为什么 OpenAI、Anthropic、Google、LangGraph 等公司都在讨论 Graph，却又似乎在谈论不同的东西，因为它们关注的是不同层次的问题。
 
-# 二、Task Graph：组织任务如何执行
+## 二、Task Graph：组织任务如何执行
 
 对于绝大多数 AI Agent 来说，Graph 最早出现的地方，就是任务执行（Task Execution）。
 
@@ -122,13 +122,13 @@ AI Agent Graph
 
 事实上，这种思想并不是 AI Agent 发明的。传统软件中的工作流（Workflow）、CI/CD Pipeline、数据处理流水线（Data Pipeline），本质上都是一种 Task Graph。AI Agent 只是把 Graph 的节点，从传统的软件模块，变成了可以由 LLM 驱动的任务节点。
 
-## 2.1 Node：Graph 中真正执行的单元
+### 2.1 Node：Graph 中真正执行的单元
 
 节点（Node）是 Task Graph 的基础组成单元，是所有具体工作的落地载体，其核心定义是「可独立完成某项具体工作的执行单元」，形态并不固定。
 
 常见的 Node 类型包括：单次大模型推理、工具调用指令、自定义 Python 函数、MCP 服务调用、独立子 Agent 执行任务等。比如在研究报告生成场景中，搜索资料、阅读网页、内容总结、文案撰写，每一项独立操作都是一个专属 Node，各司其职，共同支撑完整任务落地。
 
-## 2.2 Edge：定义任务流转的核心逻辑
+### 2.2 Edge：定义任务流转的核心逻辑
 
 如果说 Node 决定了「系统要做什么」，那么 Edge（边）就决定了「系统下一步要做什么」，是管控任务流转、分支、并行、跳转的核心。
 
@@ -168,26 +168,26 @@ Planner
 
 因此，Edge 不只是连接节点，更决定了整个任务的执行逻辑。
 
-## 2.3 State：支撑 Graph 连续工作的共享上下文
+### 2.3 State：支撑 Graph 连续工作的共享上下文
 
 仅有 Node 和 Edge，还不足以完成一个 Agent。因为每个节点都需要知道“前面的节点完成了什么”、“已经收集了哪些信息”、“下一步应该继续处理什么”。这些共享的信息，就是 State（状态）。
 
 例如，一个 Research Agent 可以维护这样一个状态：
 
 ```Plain
-# 研究状态
+## 研究状态
 
-## 研究主题
+### 研究主题
 
-## 搜索查询
+### 搜索查询
 
-## 参考资料
+### 参考资料
 
-## 研究总结
+### 研究总结
 
-## 报告初稿
+### 报告初稿
 
-## 质量评估
+### 质量评估
 ```
 
 每一个节点都会读取 State，也会更新 State。例如：
@@ -200,7 +200,7 @@ Write Node：新增初稿。
 
 整个 Graph 就像很多人共同编辑同一份文档，每个人负责不同部分，但所有人的工作都基于同一份最新的数据。因此，State 可以理解为是，Graph 在执行过程中不断演化的共享上下文。
 
-## 2.4 State Handoff：节点之间的高效协作机制
+### 2.4 State Handoff：节点之间的高效协作机制
 
 很多文章都会提到一个概念：State Handoff（状态传递）。其实，它并不复杂。它表示的是一个节点完成工作后，把最新的 State 交给下一个节点继续执行。例如：
 
@@ -223,7 +223,7 @@ Planner 首先生成搜索计划，并把 Query（搜索关键词）写入 State
 
 Node 负责完成工作。State 负责保存工作成果。
 
-## 2.5 Task Graph 的核心价值
+### 2.5 Task Graph 的核心价值
 
 很多人误以为 Task Graph 只是简单的「提示词拆分步骤」。实际上，其真正的核心价值，是让 AI Agent 的任务执行从一次性模型调用，升级为标准化、可管控、可运维的工程化流程。
 
@@ -239,7 +239,7 @@ Node 负责完成工作。State 负责保存工作成果。
 
 当然，Task Graph 存在明确的边界局限：其所有节点均定义为「被动执行任务的单元」，无法自主规划、自主迭代。当执行单元升级为具备独立思考、自主决策能力的完整 Agent 时，Task Graph 便无法适配，此时就需要第二种 Graph 架构：Agent Graph。
 
-# 三、Agent Graph：组织多个 Agent 如何协作
+## 三、Agent Graph：组织多个 Agent 如何协作
 
 随着 Agent 能力不断增强，一个新的问题开始出现：一个 Agent，真的应该负责所有事情吗？
 
@@ -256,7 +256,7 @@ Prompt 越来越长，角色越来越复杂；
 
 这与传统软件的发展过程非常相似。早期的软件通常是一个庞大的单体应用（Monolith），所有功能都集中在同一个系统中；随着系统规模不断扩大，软件工程逐渐演化出模块化架构、微服务架构等设计方式，将不同职责拆分成独立模块。AI Agent 也正在经历类似的演进。越来越多的系统开始选择多个 Agent 协同工作，而不是一个 Agent 包揽所有职责。
 
-## 3.1 一个复杂任务可以由多个 Agent 共同完成
+### 3.1 一个复杂任务可以由多个 Agent 共同完成
 
 以前面的 Research Agent 为例，一个典型的 Multi-Agent 系统可能会拆分为下面几个角色：
 
@@ -297,7 +297,7 @@ Planner Agent
 
 因此，Agent Graph 的出现，并不是为了让系统变得更复杂，而是为了让复杂任务能够被合理拆解和协同完成。
 
-## 3.2 Agent Graph 的核心是协作关系，而非 Agent 数量
+### 3.2 Agent Graph 的核心是协作关系，而非 Agent 数量
 
 很多人第一次接触 Multi-Agent 时，关注点往往放在“我应该拆多少个 Agent”。实际上，更重要的问题是：这些 Agent 应该如何协作？
 
@@ -317,7 +317,7 @@ Agent Graph 真正组织的，不是 Agent 本身，而是 Agent 之间的关系
 
 Graph 描述的，正是这些关系如何共同组成一个协作网络。
 
-## 3.3 State Handoff 与 Agent Handoff 的核心区别
+### 3.3 State Handoff 与 Agent Handoff 的核心区别
 
 在上一章中，我们介绍了 State Handoff（状态传递）。当 Graph 的节点是 Task 时，节点之间传递的是共享状态（State）。
 
@@ -329,7 +329,7 @@ State Handoff 强调的是数据的传递。例如，Search Agent 将搜索结�
 
 在实际系统中，两者通常同时发生：控制权转移到新的 Agent，同时共享状态也被传递和更新。
 
-## 3.4 Agent Graph 并非越复杂越好
+### 3.4 Agent Graph 并非越复杂越好
 
 Multi-Agent 并不是万能方案。事实上，很多 Agent 项目在早期都会犯一个共同的错误：把所有能力都拆成不同的 Agent。
 
@@ -339,7 +339,7 @@ Multi-Agent 并不是万能方案。事实上，很多 Agent 项目在早期都�
 
 Agent Graph 的目标不是追求更多 Agent，而是让协作关系与问题复杂度相匹配。
 
-## 3.5 Agent Graph 的核心边界
+### 3.5 Agent Graph 的核心边界
 
 Task Graph 解决的是“任务如何执行”，Agent Graph 解决的是“多个 Agent 如何协作”。然而，无论采用单 Agent 还是 Multi-Agent，它们都默认了一个前提：只要不断执行任务，系统就会越来越好。
 
@@ -349,13 +349,13 @@ Task Graph 解决的是“任务如何执行”，Agent Graph 解决的是“多
 
 此时，真正需要组织的，已经不再是 Task，也不再是 Agent，而是一个又一个负责优化系统的 Feedback Loop（反馈循环）。这也是近年来越来越多人开始讨论 “From Loops to Graphs” 的原因。
 
-# 四、Feedback Graph：组织系统如何持续优化
+## 四、Feedback Graph：组织系统如何持续优化
 
 如果说 Task Graph 回答的是“任务应该如何执行”，Agent Graph 回答的是“多个 Agent 应该如何协作”，那么，Feedback Graph 回答的则是另一个更加底层的问题：系统如何持续变得更好？
 
 Feedback Graph 关注的，不是如何完成一次任务，而是如何让整个 Agent 系统在长期运行中不断学习、不断修正、不断演进。
 
-## 4.1 Loop：Agent 持续优化的最小单位
+### 4.1 Loop：Agent 持续优化的最小单位
 
 任何一个能够不断改进自己的系统，都离不开一个最基本的结构：
 
@@ -403,7 +403,7 @@ Feedback Graph 关注的，不是如何完成一次任务，而是如何让整�
 
 因此，Loop 可以理解为：Agent 持续优化自己的最小反馈单元。事实上，很多 Agent 今天都已经具备了 Loop。像 Reflection（反思）、Self-Refine（自迭代优化）、ReAct（推理行动框架）、Critic-Reviewer（评审器架构）、Plan → Execute → Reflect（规划 - 执行 - 反思）等机制，本质上都是 Feedback Loop 的不同实现。
 
-## 4.2 为什么一个 Loop 不够
+### 4.2 为什么一个 Loop 不够
 
 如果只有一个评价指标，一个 Loop 往往可以取得不错的效果。但随着系统越来越复杂，一个问题开始出现：Loop 优化的，真的是我们想要的吗？
 
@@ -415,7 +415,7 @@ Feedback Graph 关注的，不是如何完成一次任务，而是如何让整�
 
 Loop 的问题，不是不会优化。恰恰相反。它太擅长优化了。
 
-## 4.3 复杂系统，必然存在多组并行 Loop
+### 4.3 复杂系统，必然存在多组并行 Loop
 
 现实中的 AI Agent，远比一个 Loop 更复杂。
 
@@ -449,7 +449,7 @@ Loop 的问题，不是不会优化。恰恰相反。它太擅长优化了。
 
 于是，Loop 开始彼此连接，Graph 就出现了。
 
-## 4.4 Feedback Graph：多 Feedback Loop 的组网体系
+### 4.4 Feedback Graph：多 Feedback Loop 的组网体系
 
 包括 Peter Steinberger 在内的许多开发者提出的 Graph，指的是 Network of Feedback Loops（反馈循环网络），​可以表示为：
 
@@ -486,7 +486,7 @@ Graph 在这里的意义，不再是任务如何流转，而是多个 Feedback L
 
 Graph 描述的，不再是执行流程，而是整个优化系统的结构。
 
-## 4.5 Feedback Graph 解决了什么
+### 4.5 Feedback Graph 解决了什么
 
 相较于单一 Feedack Loop，Feedback Graph 从根源上解决了复杂 Agent 系统的迭代短板，核心价值体现在四个维度：
 
@@ -498,7 +498,7 @@ Graph 描述的，不再是执行流程，而是整个优化系统的结构。
 
 第四，让系统真正具备长期演进能力。一个生产级 Agent，并不是执行一次任务。它可能连续运行几个月、几年。Graph 描述的是整个系统如何随着时间不断成长，而不是一次任务如何完成。
 
-## 3 种 Graph 小结
+### 4.6 3 种 Graph 小结
 
 Task Graph、Agent Graph 和 Feedback Graph，看起来都叫 Graph，但它们组织的对象完全不同：
 
@@ -508,7 +508,7 @@ Task Graph 的节点是 Task，旨在组织任务如何执行；Agent Graph 的�
 
 Graph 的真正意义，也因此发生了变化。
 
-# 五、Graph、Loop、Runtime 与 Harness，到底是什么关系
+## 五、Graph、Loop、Runtime 与 Harness，到底是什么关系
 
 很多读者发现，Loop，Graph 这些概念常常与另一些词一起出现，比如 Harness、Runtime。有些文章甚至会提出 Loop Engineering、Graph Engineering 等说法。
 
@@ -516,7 +516,7 @@ Graph 的真正意义，也因此发生了变化。
 
 我认为，理解这些概念，最重要的是不要把它们放在同一个层次。它们关注的问题，其实完全不同。
 
-## 5.1 Loop：Agent 思考的基本循环
+### 5.1 Loop：Agent 思考的基本循环
 
 Loop 是最容易理解的概念。
 
@@ -558,7 +558,7 @@ Next Loop（下一个循环）
 
 Loop 本质上描述的是一种行为模式（Behavior Pattern）。
 
-## 5.2 Graph：组织多个 Loop、Task 或 Agent
+### 5.2 Graph：组织多个 Loop、Task 或 Agent
 
 如果说 Loop 是一个最小循环，那么 Graph，就是组织多个循环之间关系的方法。只不过，根据组织对象不同，Graph 又可以分成三种：
 
@@ -570,7 +570,7 @@ Loop 本质上描述的是一种行为模式（Behavior Pattern）。
 
 因此，Loop 与 Graph 的关系其实非常简单。Loop 是一个循环。Graph 是多个 Loop（或者多个 Task、多个 Agent）之间的组织关系。Graph 并不是比 Loop 更高级，它只是组织对象发生了变化。
 
-## 5.3 Runtime：让整个 Graph 持续运行
+### 5.3 Runtime：让整个 Graph 持续运行
 
 那么，Graph 有了以后，是不是 Agent 就可以运行了？答案是否定的。
 
@@ -597,7 +597,7 @@ Checkpoint 如何恢复？
 
 如果把 Agent 比作一个程序，那么 Runtime 就像操作系统。程序决定做什么，操作系统决定程序如何真正运行。
 
-## 5.4 Harness：Runtime 的工程化实现
+### 5.4 Harness：Runtime 的工程化实现
 
 理解了 Runtime，Harness 就很好理解了。
 
@@ -613,7 +613,7 @@ Runtime 更像是一种架构思想，它回答的是：一个 Agent Runtime 应
 
 Harness 把 Runtime 从一套设计思想，真正变成一个能够部署到生产环境中的工程系统。
 
-## 结语
+### 结语
 
 综上所述，Loop、Graph、Runtime 和 Harness，并不是彼此替代，而是在不同层次共同构成现代 AI Agent 的工程体系。
 
