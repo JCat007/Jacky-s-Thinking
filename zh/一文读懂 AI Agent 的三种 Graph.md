@@ -305,13 +305,13 @@ Agent Graph 真正组织的，不是 Agent 本身，而是 Agent 之间的关系
 
 这意味着，Graph 中的边（Edge）描述的不再是简单的执行顺序，而是协作关系。这些关系通常包括：
 
-​**（1）Delegation（任务委派）**​：一个 Agent 将子任务交给另一个 Agent；
+（1）Delegation（任务委派）​：一个 Agent 将子任务交给另一个 Agent；
 
-​**（2）Routing（任务路由）**​：根据不同情况，把任务发送给不同 Agent；
+​（2）Routing（任务路由）：根据不同情况，把任务发送给不同 Agent；
 
-​**（3）Aggregation（结果汇聚）**​：多个 Agent 的结果汇总后继续处理；
+​（3）Aggregation（结果汇聚）：多个 Agent 的结果汇总后继续处理；
 
-​**（4）Handoff（任务交接）**​：一个 Agent 完成自己的职责后，将任务交给下一位 Agent。
+​（4）Handoff（任务交接）​：一个 Agent 完成自己的职责后，将任务交给下一位 Agent。
 
 Graph 描述的，正是这些关系如何共同组成一个协作网络。
 
@@ -449,7 +449,7 @@ Loop 的问题，不是不会优化。恰恰相反。它太擅长优化了。
 
 ## 4.4 Feedback Graph：多 Feedback Loop 的组网体系
 
-包括 Peter Steinberger 在内的许多开发者提出的 Graph，指的是 Network of Feedback Loops（反馈循环网络）**​，​**可以表示为：
+包括 Peter Steinberger 在内的许多开发者提出的 Graph，指的是 Network of Feedback Loops（反馈循环网络），​可以表示为：
 
 ```Plain
 规划 loop
@@ -560,11 +560,11 @@ Loop 本质上描述的是一种行为模式（Behavior Pattern）。
 
 如果说 Loop 是一个最小循环，那么 Graph，就是组织多个循环之间关系的方法。只不过，根据组织对象不同，Graph 又可以分成三种：
 
-第一种，是 ​**Task Graph**​。Graph 的节点是 Task，描述哪些任务先执行、哪些任务并行执行、哪些任务执行完成以后再继续下一步；
+第一种，是 Task Graph​。Graph 的节点是 Task，描述哪些任务先执行、哪些任务并行执行、哪些任务执行完成以后再继续下一步；
 
-第二种，是 ​**Agent Graph**​。Graph 的节点变成了 Agent，描述多个 Agent 如何分工、如何交接、如何协作完成复杂任务；
+第二种，是 ​Agent Graph​。Graph 的节点变成了 Agent，描述多个 Agent 如何分工、如何交接、如何协作完成复杂任务；
 
-第三种，是 ​**Feedback Graph**​。Graph 的节点变成了一个个 Feedback Loop，描述整个系统如何持续优化自己。
+第三种，是 ​Feedback Graph​。Graph 的节点变成了一个个 Feedback Loop，描述整个系统如何持续优化自己。
 
 因此，Loop 与 Graph 的关系其实非常简单。Loop 是一个循环。Graph 是多个 Loop（或者多个 Task、多个 Agent）之间的组织关系。Graph 并不是比 Loop 更高级，它只是组织对象发生了变化。
 
