@@ -1,5 +1,7 @@
 # 读完 World Labs 的世界模型功能分类法，我重新理解了世界模型
 
+[English Version](https://github.com/JCat007/Jacky-s-Thinking/blob/main/en/Rethinking%20World%20Models%20After%20Reading%20World%20Labs'%20Functional%20Taxonomy.md)
+
 近期细读了 World Labs 的《[世界模型功能分类法（A Functional Taxonomy of World Models）](https://www.worldlabs.ai/blog/taxonomy-of-world-models)》一文，刷新了我对世界模型（World Model）的固有认知。这篇文章帮我厘清了一个最基础、却最容易被混淆的核心问题：世界模型到底是什么？
 
 过去两年，“世界模型”成为了 AI 领域最热门的概念之一。从视频生成模型到机器人公司、自动驾驶公司都在说自己在做世界模型。物理 AI 领域直接说世界模型是下一代 AI 的核心能力。
