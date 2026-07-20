@@ -393,7 +393,7 @@ The speed metric improves drastically, but output quality degrades severely with
 
 This is a classic manifestation of Goodhart’s Law: when a metric becomes the sole optimization target, it ceases to be a valid measure of system quality. Loops excel at optimization. In fact, they often optimize excessively in single-metric scenarios.
 
-### 4.7 Complex Systems Require Multiple Parallel Loops
+### 4.3 Complex Systems Require Multiple Parallel Loops
 
 Production-grade AI Agents depend on multiple interdependent Feedback Loops governing distinct system capabilities:
 
