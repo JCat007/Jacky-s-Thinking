@@ -615,6 +615,41 @@ Harness 把 Runtime 从一套设计思想，真正变成一个能够部署到生
 
 ### 结语
 
-综上所述，Loop、Graph、Runtime 和 Harness，并不是彼此替代，而是在不同层次共同构成现代 AI Agent 的工程体系。
+综上所述，Loop、Graph、Runtime 和 Harness，并不是彼此替代，而是在不同层次共同构成现代 AI Agent 的工程体系。它们之间的关系可以用这个图来表示：
+
+```
+                Goal
+                  │
+                  ▼
+          Agent Intelligence
+     （Reason / Planning）
+                  │
+                  ▼
+────────────────────────────────
+          Runtime
+────────────────────────────────
+
+     Graph（执行拓扑）
+
+     Loop（执行循环）
+
+     Scheduler（调度）
+
+     State（状态）
+
+     Memory（记忆）
+
+     Recovery（恢复）
+
+     Governance（治理）
+
+     Tool Runtime（工具）
+
+────────────────────────────────
+                  │
+                  ▼
+               Harness
+        （工程实现）
+```
 
 最后，针对社区中热议的“从 Loop 走向 Graph”。我认为，这里面反映的真正变化，是 Agent 设计哲学正在从设计单个 Agent，走向设计整个 Agent 系统。
