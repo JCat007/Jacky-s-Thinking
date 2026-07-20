@@ -1,3 +1,7 @@
+# Understanding Three Types of Graphs in AI Agents
+
+[中文](https://github.com/JCat007/Jacky-s-Thinking/blob/main/zh/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82%20AI%20Agent%20%E7%9A%84%E4%B8%89%E7%A7%8D%20Graph.md)
+
 If you have been following AI Agent developments recently, you may have noticed a clear trend: the industry is increasingly talking about Graphs.
 
 Frameworks including LangGraph, Google ADK, and CrewAI Flow all prioritize Graph-based architectures. Meanwhile, companies such as OpenAI and Anthropic are increasingly focusing on Graph structures and complex orchestration for Agent systems. Peter Steinberger's question widely shared on X has further fueled discussions around Graphs (“Are we still talking loops or did we shift to graphs yet?”).
