@@ -1,6 +1,6 @@
 # 一文读懂 AI Agent 的三种 Graph
 
-(English Version)[https://github.com/JCat007/Jacky-s-Thinking/blob/main/en/Understanding%20Three%20Types%20of%20Graphs%20in%20AI%20Agents.md]
+[English Version](https://github.com/JCat007/Jacky-s-Thinking/blob/main/en/Understanding%20Three%20Types%20of%20Graphs%20in%20AI%20Agents.md)
 
 如果你最近关注 AI Agent，一定会发现一个现象：越来越多的人开始讨论 Graph（图结构）。
 
